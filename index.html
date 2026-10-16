@@ -483,9 +483,8 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 
   <footer>
     <div class="foot-in">
-      <div class="acts" style="justify-content:center;margin-bottom:26px"><button class="btn" type="button" data-a="doc" data-d="hakkimizda" style="max-width:260px">Hakkımızda</button></div>
-
-      <div class="acts" id="contact" style="justify-content:center;margin-top:0px"></div>
+      <div class="acts" style="justify-content:center;margin-bottom:12px"><button class="btn" type="button" data-a="doc" data-d="hakkimizda" style="max-width:260px">Hakkımızda</button></div>
+      <div class="acts" id="contact" style="justify-content:center;margin-bottom:28px"></div>
       <div class="quotes">
         <div class="quote"><div class="ar">اللُّغَةُ مِفْتَاحُ القُلُوبِ</div><p>Dil, kalplerin anahtarıdır.</p></div>
         <div class="quote"><div class="ar">مَنْ جَدَّ وَجَدَ</div><p>Çalışan bulur. PaKdil ile her gün biraz daha ilerle.</p></div>
@@ -764,7 +763,7 @@ function drawMine(){
   $('#mine').innerHTML=it.length?'<div class="card" style="margin-top:20px">'+it.map(k=>`<div class="row"><strong>${esc(k.baslik)}</strong>${/^https?:\/\//i.test(k.icerik||'')?`<a class="btn s" href="${esc(k.icerik)}" target="_blank" rel="noopener noreferrer">İçeriğe git</a>`:'<span class="sm">Bağlantı yakında eklenecek</span>'}</div>`).join('')+'</div>':'<div class="empty" style="margin-top:20px">Onaylanmış bir paketin yok. Siparişin onaylanınca burada görünür.</div>';
 }
 function contactHTML(){const w=(pay.wa||'').replace(/\D/g,'');return `<a class="btn s g" href="mailto:${ADMIN_EMAIL}">E-posta</a>`+(w?`<a class="btn s ok" href="https://wa.me/${w}" target="_blank" rel="noopener">WhatsApp</a>`:'')}
-function drawContact(){$('#contact').innerHTML=contactHTML()}
+function drawContact(){const w=(pay.wa||'').replace(/\D/g,'');$('#contact').innerHTML=`<a class="btn" href="mailto:${ADMIN_EMAIL}" style="max-width:260px">Bize Ulaşın</a>`+(w?`<a class="btn ok" href="https://wa.me/${w}" target="_blank" rel="noopener" style="max-width:260px">WhatsApp</a>`:'')}
 function drawMyOrders(){
   $('#myOrders').innerHTML=myOrders.length?sorted(myOrders).map(o=>`<div class="card"><div class="row" style="padding-top:0"><strong>${o.kod?esc(o.kod)+' · ':''}${tarih(o.ts)}</strong>${durumChip(o.durum)}</div>${o.kalemler.map(k=>`<div class="row"><span>${esc(k.baslik)}</span><span>${TL(k.fiyat)}</span></div>`).join('')}<div class="total"><span>Toplam</span><span>${TL(o.toplam)}</span></div></div>`).join(''):'<div class="empty" style="margin-top:20px">Henüz siparişin yok.</div>';
 }
