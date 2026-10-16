@@ -185,55 +185,6 @@ textarea:focus,select:focus{border-color:var(--red);outline:none;box-shadow:0 0 
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);background:#000;color:#fff;padding:12px 20px;border-radius:10px;border-left:5px solid var(--red);font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:80}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
-/* ---------- paket süsleri: etiket, çerçeve, flash indirim ---------- */
-@property --ang{syntax:'<angle>';initial-value:0deg;inherits:false}
-.gal{position:relative}
-.tags{position:absolute;left:12px;right:12px;top:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:2;pointer-events:none}
-.tg{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:99px;font-size:.78rem;font-weight:800;letter-spacing:.02em;color:#fff;background:var(--g);text-shadow:0 1px 1px rgba(0,0,0,.28);box-shadow:0 5px 14px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.4)}
-.tg.red{--g:linear-gradient(135deg,#ff3b5c,#c8102e)}
-.tg.orange{--g:linear-gradient(135deg,#ffa31a,#ff5a00)}
-.tg.yellow{--g:linear-gradient(135deg,#fff04a,#ffb300);color:#3b2600;text-shadow:none}
-.tg.green{--g:linear-gradient(135deg,#34e884,#0b9a4a)}
-.tg.blue{--g:linear-gradient(135deg,#34a4ff,#1447d6)}
-.tg.purple{--g:linear-gradient(135deg,#bb66ff,#6a1fd1)}
-.tg.pink{--g:linear-gradient(135deg,#ff66c9,#d6178f)}
-.tg.gold{--g:linear-gradient(135deg,#fff3b0,#e6b422 55%,#a87400);color:#3a2600;text-shadow:none}
-.tg.black{--g:linear-gradient(135deg,#2e2e2e,#000);box-shadow:0 5px 14px rgba(0,0,0,.35),inset 0 0 0 1.5px #e6b422}
-.crown{position:absolute;right:12px;top:12px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;z-index:3;background:linear-gradient(135deg,#fff3b0,#e6b422 55%,#a87400);box-shadow:0 6px 16px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.75)}
-.crown svg{width:23px;height:23px;fill:#3b2600}
-
-.pk.f-gumus,.pk.f-gold,.pk.f-premium{border:3px solid transparent}
-.pk.f-gumus{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#f7f9fb,#9aa4b2 28%,#eef1f5 50%,#7d8896 76%,#e3e8ee) border-box;box-shadow:0 10px 26px rgba(110,125,145,.24)}
-.pk.f-gold{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#fff1a8,#e6b422 28%,#fff0a0 50%,#c68a00 76%,#f6d365) border-box;box-shadow:0 12px 32px rgba(214,160,20,.32)}
-.pk.f-premium{border-width:4px;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--ang),#fff1a8,#e6b422,#8a5a00,#ffe27a,#e6b422,#fff1a8) border-box;box-shadow:0 16px 44px rgba(214,160,20,.45);animation:ang 6s linear infinite}
-.pk.f-premium .pk-b{background:linear-gradient(#fff,#fffaf0)}
-.pk.f-premium .tags{right:66px}
-.pk.f-premium .btn:not(:disabled){background:linear-gradient(135deg,#f6d365,#c68a00);color:#2b1a00;border:0}
-@keyframes ang{to{--ang:360deg}}
-
-.pw{display:flex;flex-direction:column;line-height:1.1}
-.was{color:var(--mute);font-size:.86rem;font-weight:600;text-decoration:line-through}
-.price.sale{color:var(--red)}
-.flash{position:relative;overflow:hidden;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:14px;color:#fff;background:linear-gradient(120deg,#c8102e,#ff4b1f 60%,#ff9a1f);box-shadow:0 10px 24px rgba(255,75,31,.34)}
-.flash::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.38) 50%,transparent 65%);transform:translateX(-120%);animation:shine 3.4s ease-in-out infinite;pointer-events:none}
-@keyframes shine{to{transform:translateX(120%)}}
-.fl-l{display:flex;align-items:center;gap:10px}
-.fl-l svg{width:30px;height:30px;flex:none;fill:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.28))}
-.fl-t strong{display:block;font-size:1.12rem;font-weight:800;line-height:1.1}
-.fl-t span{font-size:.74rem;opacity:.94}
-.cd{display:flex;gap:5px;position:relative;z-index:1}
-.cd i{font-style:normal;background:rgba(0,0,0,.3);border-radius:8px;padding:4px 7px;min-width:40px;text-align:center;font-weight:800;font-size:1.02rem;line-height:1.1;font-variant-numeric:tabular-nums}
-.cd i small{display:block;font-size:.58rem;font-weight:600;opacity:.88}
-
-.tgbuild{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
-.tgbuild .btn{white-space:nowrap}
-.tgprev{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;min-height:30px;align-items:center}
-.tgx{width:18px;height:18px;border:0;border-radius:50%;background:rgba(0,0,0,.28);color:inherit;font-weight:800;line-height:1;cursor:pointer;padding:0}
-.flbox{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-top:4px;padding:4px 16px 16px;border:1.5px dashed #ff9a1f;border-radius:14px;background:#fff8f0}
-.flbox>#fbW{grid-column:1/-1}
-@media (max-width:560px){.tgbuild{grid-template-columns:1fr 1fr}.tgbuild input{grid-column:1/-1}.flbox{grid-template-columns:1fr}.cd i{min-width:34px;padding:4px 5px}}
-@media (prefers-reduced-motion:reduce){.flash::after,.pk.f-premium{animation:none!important}}
-
 /* ---------- admin teması, onay renkleri, yükleniyor ---------- */
 body.admin{--red:#0d3b8c;--red-d:#082a66}
 body.admin .topbar{background:#06142e}
@@ -266,6 +217,18 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 .topic.soon:hover{border-color:var(--line);box-shadow:none;transform:none}
 .soon-chip{margin-left:6px;vertical-align:middle;background:#eee;color:var(--mute);font-size:.7rem}
 .vnote{background:#fff1c9;border-radius:12px;padding:10px 14px;font-size:.88rem;margin-bottom:14px}
+.pk{position:relative}
+.tags{position:absolute;top:10px;right:10px;z-index:2;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.tg{color:#fff;font-size:.74rem;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 8px rgba(0,0,0,.25);letter-spacing:.2px}
+.tg.altin{color:#3b2a00}
+.pk.s-gumus{border:2.5px solid #aab4c3;box-shadow:0 4px 16px rgba(120,135,160,.25)}
+.pk.s-gold{border:2.5px solid #d4a017;box-shadow:0 0 0 3px rgba(212,160,23,.15),0 6px 22px rgba(212,160,23,.3)}
+.pk.s-premium{border:3px solid #d4a017;box-shadow:0 0 0 4px rgba(212,160,23,.22),0 10px 34px rgba(212,160,23,.5);background:linear-gradient(180deg,#fffbea,#fff 40%)}
+.pk .old{color:var(--mute);font-weight:600;font-size:.95rem;margin-right:6px}
+.pk .new{color:var(--red)}
+.off{display:inline-block;background:#16a34a;color:#fff;font-size:.74rem;font-weight:800;padding:3px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.cd{display:block;font-size:.8rem;font-weight:700;color:var(--red);margin-top:2px}
+.etr{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -442,18 +405,16 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
           <div class="w"><label for="pt">Paket adı</label><input id="pt" required></div>
           <div class="w"><label for="pd">Açıklama</label><textarea id="pd" rows="4" required></textarea></div>
           <div><label for="pf">Fiyat (TL)</label><input id="pf" type="number" min="0" step="0.01" required></div>
-          <div><label for="pc">Çerçeve seviyesi</label><select id="pc"><option value="standart">Standart</option><option value="gumus">Gümüş</option><option value="gold">Gold</option><option value="premium">Premium (gold + taç)</option></select></div>
-          <div class="w"><label for="tgT">Etiketler (en fazla 5, her biri farklı renkte olabilir)</label>
-            <div class="tgbuild"><input id="tgT" maxlength="24" placeholder="Örn. Çok satan"><select id="tgC" aria-label="Etiket rengi"></select><button type="button" class="btn s g" id="tgAdd">Etiket ekle</button></div>
-            <div class="tgprev" id="tgList"></div></div>
-          <div class="w"><label class="chk"><input type="checkbox" id="fl"><span>Flash indirim uygula</span></label>
-            <div class="flbox" id="flBox" hidden>
-              <div><label for="fp">İndirimli fiyat (TL)</label><input id="fp" type="number" min="0" step="0.01"></div>
-              <div><label for="fm">İndirim türü</label><select id="fm"><option value="s">Süreli (geri sayımlı)</option><option value="u">Süresiz (ben kapatana kadar)</option></select></div>
-              <div id="fbW"><label for="fb">Bitiş tarihi ve saati</label><input id="fb" type="datetime-local"></div>
-            </div></div>
           <div class="w"><label for="pi">İçerik bağlantısı (sadece satın alanlar görür)</label><input id="pi" type="url" placeholder="https://drive.google.com/..."></div>
           <div class="w"><label for="pg">Görsel bağlantıları (her satıra bir tane)</label><textarea id="pg" rows="3" placeholder="https://i.ibb.co/..."></textarea></div>
+          <div class="w"><label>Etiketler (en fazla 3, boş bırakılabilir)</label>
+            <div class="etr"><input class="et-t" maxlength="24" placeholder="Örn. En Kapsamlı"><select class="et-r"></select></div>
+            <div class="etr"><input class="et-t" maxlength="24" placeholder="İkinci etiket"><select class="et-r"></select></div>
+            <div class="etr"><input class="et-t" maxlength="24" placeholder="Üçüncü etiket"><select class="et-r"></select></div></div>
+          <div><label for="ps">Çerçeve seviyesi</label><select id="ps"><option value="standart">Standart</option><option value="gumus">Gümüş</option><option value="gold">Gold</option><option value="premium">Premium (gold + parıltı + taç)</option></select></div>
+          <div></div>
+          <div><label for="pif">Flash indirimli fiyat (TL, boşsa indirim yok)</label><input id="pif" type="number" min="0" step="0.01"></div>
+          <div><label for="pib">İndirim bitişi (boşsa süresiz)</label><input id="pib" type="datetime-local"></div>
           <div class="w"><label class="chk"><input type="checkbox" id="py" checked><span>Yayında (herkes görsün). İşareti kaldırırsan taslak olur, sadece sen görürsün.</span></label></div>
           <div class="w acts" style="margin-top:18px"><button class="btn s" type="submit" id="pSave">Paketi ekle</button><button class="btn s g" type="button" id="pReset" hidden>Vazgeç</button></div>
         </form>
@@ -638,85 +599,26 @@ $('#vCheck').addEventListener('click',e=>busy(e.currentTarget,async()=>{
 }));
 const sorted=a=>[...a].sort((x,y)=>(y.ts?.seconds||0)-(x.ts?.seconds||0));
 
-/* ---------- paket süsleri: etiket, çerçeve, flash indirim ---------- */
-const TAGC={red:'Kırmızı',orange:'Turuncu',yellow:'Sarı',green:'Yeşil',blue:'Mavi',purple:'Mor',pink:'Pembe',gold:'Altın',black:'Siyah'};
-const FRAMES=['standart','gumus','gold','premium'];
-const BOLT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4 13.5h6.2L9.5 22 20 9.8h-6.4z"/></svg>';
-const CROWN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>';
-const frameOf=p=>FRAMES.includes(p.cerceve)?p.cerceve:'standart';
-const flashOn=p=>{const f=Number(p.indirimFiyat);return f>0&&f<Number(p.fiyat)&&(!p.indirimBitis||Number(p.indirimBitis)>Date.now())};
-const fiyatOf=p=>flashOn(p)?Number(p.indirimFiyat):Number(p.fiyat);
-const cdHTML=ms=>{
-  let s=Math.max(0,Math.floor((ms-Date.now())/1000));
-  const d=Math.floor(s/86400);s%=86400;
-  const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;
-  const b=(v,l)=>`<i>${String(v).padStart(2,'0')}<small>${l}</small></i>`;
-  return (d?b(d,'gün'):'')+b(h,'sa')+b(m,'dk')+b(c,'sn');
-};
-const tagsHTML=p=>(p.etiketler||[]).filter(t=>t&&t.t).map(t=>`<span class="tg ${TAGC[t.r]?t.r:'red'}">${esc(t.t)}</span>`).join('');
-const decoHTML=p=>{
-  const t=tagsHTML(p);
-  return (t?`<div class="tags">${t}</div>`:'')+(frameOf(p)==='premium'?`<span class="crown" title="Premium">${CROWN}</span>`:'');
-};
-const priceHTML=p=>{
-  const on=flashOn(p);
-  return `<span class="pw">${on?`<s class="was">${TL(p.fiyat)}</s>`:''}<span class="price${on?' sale':''}">${TL(fiyatOf(p))}</span></span>`;
-};
-function flashHTML(p){
-  if(!flashOn(p))return '';
-  const pct=Math.max(1,Math.round((1-Number(p.indirimFiyat)/Number(p.fiyat))*100)),end=Number(p.indirimBitis)||0;
-  return `<div class="flash"><div class="fl-l">${BOLT}<div class="fl-t"><strong>%${pct} indirim</strong><span>${end?'Süre dolunca fiyat normale döner':'Kampanya fiyatı geçerli'}</span></div></div>${end?`<div class="cd" data-end="${end}">${cdHTML(end)}</div>`:''}</div>`;
-}
-// geri sayım: her saniye güncellenir, süre bitince kartlar ve ödeme ekranı yenilenir
-setInterval(()=>{
-  let bitti=false;
-  $$('.cd[data-end]').forEach(e=>{const end=Number(e.dataset.end);if(end<=Date.now())bitti=true;else e.innerHTML=cdHTML(end)});
-  if(bitti){drawPk();drawCart()}
-},1000);
-
-// admin formu: etiket oluşturucu ve flash indirim alanları
-let ptags=[];
-$('#tgC').innerHTML=Object.entries(TAGC).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
-function drawTgList(){
-  $('#tgList').innerHTML=ptags.length?ptags.map((t,i)=>`<span class="tg ${esc(t.r)}">${esc(t.t)}<button type="button" class="tgx" data-ti="${i}" aria-label="Etiketi kaldır">×</button></span>`).join(''):'<span class="sm">Henüz etiket yok.</span>';
-}
-function addTag(){
-  const t=$('#tgT').value.trim();
-  if(!t)return toast('Etiket yazısını gir.');
-  if(ptags.length>=5)return toast('En fazla 5 etiket ekleyebilirsin.');
-  ptags.push({t:t.slice(0,24),r:$('#tgC').value});
-  $('#tgT').value='';drawTgList();$('#tgT').focus();
-}
-$('#tgAdd').addEventListener('click',addTag);
-$('#tgT').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addTag()}});
-$('#tgList').addEventListener('click',e=>{const x=e.target.closest('[data-ti]');if(x){ptags.splice(Number(x.dataset.ti),1);drawTgList()}});
-function flBoxSync(){$('#flBox').hidden=!$('#fl').checked;$('#fbW').hidden=$('#fm').value!=='s'}
-$('#fl').addEventListener('change',flBoxSync);
-$('#fm').addEventListener('change',flBoxSync);
-function resetDeco(){ptags=[];drawTgList();flBoxSync()}
-function fillDeco(p){
-  ptags=(p.etiketler||[]).filter(t=>t&&t.t).map(t=>({t:t.t,r:TAGC[t.r]?t.r:'red'}));drawTgList();
-  $('#pc').value=frameOf(p);
-  const on=Number(p.indirimFiyat)>0;
-  $('#fl').checked=on;$('#fp').value=on?p.indirimFiyat:'';$('#fm').value=p.indirimBitis?'s':'u';
-  if(p.indirimBitis){const dt=new Date(Number(p.indirimBitis));$('#fb').value=new Date(dt.getTime()-dt.getTimezoneOffset()*60000).toISOString().slice(0,16)}else $('#fb').value='';
-  flBoxSync();
-}
-drawTgList();flBoxSync();
-
 /* ---------- paketler (ana sayfa) ---------- */
 const durumda=id=>{const o=myOrders.find(o=>o.durum!=='iptal'&&(o.kalemler||[]).some(k=>k.id===id));return o?o.durum:null};
+const RENK={kirmizi:['Kırmızı','#e11d48'],turuncu:['Turuncu','#f97316'],yesil:['Yeşil','#16a34a'],mavi:['Mavi','#2563eb'],mor:['Mor','#7c3aed'],altin:['Altın','#f5c518']};
+document.querySelectorAll('.et-r').forEach(x=>x.innerHTML=Object.entries(RENK).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join(''));
+const indirimAktif=p=>{const i=p.indirim;return !!(i&&Number(i.fiyat)>=0&&i.fiyat!==''&&Number(i.fiyat)<Number(p.fiyat)&&(!i.bitis||i.bitis>Date.now()))};
+const guncelFiyat=p=>indirimAktif(p)?Number(p.indirim.fiyat):Number(p.fiyat);
+function kalan(ms){const t=Math.max(0,Math.floor(ms/1000)),g=Math.floor(t/86400),h=String(Math.floor(t%86400/3600)).padStart(2,'0'),m=String(Math.floor(t%3600/60)).padStart(2,'0'),sn=String(t%60).padStart(2,'0');return (g?g+'g ':'')+h+':'+m+':'+sn}
+setInterval(()=>{document.querySelectorAll('.cd').forEach(e=>{const t=Number(e.dataset.b)-Date.now();if(t<=0){drawPk();drawCart();return}e.textContent='Bitmesine '+kalan(t)})},1000);
 function drawPk(){
   const g=$('#pkGrid'),list=pkgs.filter(p=>p.yayin!==false);
   if(!list.length){g.innerHTML='<div class="empty">Henüz paket eklenmedi.'+(isAdmin?' Yönetim panelinden ilk paketi ekleyebilirsin.':' Yakında burada olacak.')+'</div>';return}
   g.innerHTML=list.map(p=>{
     const im=(p.gorseller||[]),dur=durumda(p.id);
-    return `<article class="pk f-${frameOf(p)}"><div class="gal">${im.length?`<img class="main" src="${esc(im[0])}" alt="${esc(p.baslik)}" loading="lazy">`:'<div class="ph">ع</div>'}
-    ${decoHTML(p)}
+    const ind=indirimAktif(p),yuzde=ind?Math.round((1-p.indirim.fiyat/p.fiyat)*100):0,sv=['gumus','gold','premium'].includes(p.seviye)?p.seviye:'standart';
+    const tags=(p.etiketler||[]).slice(0,3).map(t=>`<span class="tg ${esc(t.r)}" style="background:${(RENK[t.r]||RENK.kirmizi)[1]}">${esc(t.m)}</span>`).join('');
+    const fy=ind?`<span class="price"><s class="old">${TL(p.fiyat)}</s><span class="new">${TL(p.indirim.fiyat)}</span><span class="off">%${yuzde} indirim</span>${p.indirim.bitis?`<span class="cd" data-b="${p.indirim.bitis}">Bitmesine ${kalan(p.indirim.bitis-Date.now())}</span>`:''}</span>`:`<span class="price">${TL(p.fiyat)}</span>`;
+    return `<article class="pk s-${sv}">${tags?`<div class="tags">${tags}</div>`:''}<div class="gal">${im.length?`<img class="main" src="${esc(im[0])}" alt="${esc(p.baslik)}" loading="lazy">`:'<div class="ph">ع</div>'}
     ${im.length>1?'<div class="th">'+im.map(s=>`<img src="${esc(s)}" alt="" data-a="img" loading="lazy">`).join('')+'</div>':''}</div>
-    <div class="pk-b"><h3>${esc(p.baslik)}</h3><p>${esc(p.aciklama)}</p>
-    ${flashHTML(p)}
-    <div class="pk-f">${priceHTML(p)}<button class="btn s" data-a="buy" data-id="${p.id}" ${dur||isAdmin?'disabled':''}>${dur==='onaylandı'?'Satın alındı':dur==='bekliyor'?'Onay bekleniyor':'Satın al'}</button></div></div></article>`}).join('');
+    <div class="pk-b"><h3>${sv==='premium'?'👑 ':''}${esc(p.baslik)}</h3><p>${esc(p.aciklama)}</p>
+    <div class="pk-f">${fy}<button class="btn s" data-a="buy" data-id="${p.id}" ${dur||isAdmin?'disabled':''}>${dur==='onaylandı'?'Satın alındı':dur==='bekliyor'?'Onay bekleniyor':'Satın al'}</button></div></div></article>`}).join('');
 }
 
 /* ---------- satın alma ve ödeme ---------- */
@@ -724,8 +626,8 @@ function drawCart(){
   const b=$('#cartBox');
   const p=buying&&pkgs.find(x=>x.id===buying.id);
   if(!p||durumda(buying.id)){b.innerHTML='<div class="empty" style="margin-top:20px">Ödeme yapılacak bir paket seçili değil. Ana sayfadan paketi seçip “Satın al”a bas.</div><p style="margin-top:16px"><button class="btn s" data-v="home">Paketlere git</button></p>';return}
-  const top=fiyatOf(p),acik=kod+' - '+(prof.ad||me.email)+' - '+p.baslik;
-  b.innerHTML=`<div class="card" style="margin-top:20px"><div class="row"><div><strong>${esc(p.baslik)}</strong><br><small>Sipariş kodun: <b>${esc(kod)}</b></small></div><span>${flashOn(p)?`<s class="was">${TL(p.fiyat)}</s> `:''}${TL(top)}</span></div>
+  const top=Number(buying.fiyat),acik=kod+' - '+(prof.ad||me.email)+' - '+p.baslik;
+  b.innerHTML=`<div class="card" style="margin-top:20px"><div class="row"><div><strong>${esc(p.baslik)}</strong><br><small>Sipariş kodun: <b>${esc(kod)}</b></small></div><span>${TL(top)}</span></div>
     <div class="total"><span>Toplam</span><span>${TL(top)}</span></div></div>
     <p class="sec-sub" style="margin-top:24px">Aşağıdaki hesaba havale veya EFT yap. Açıklama kısmına aşağıdaki metni (sipariş kodu dahil) aynen yaz.</p>
     <div class="iban">
@@ -743,7 +645,7 @@ function drawCart(){
 function startBuy(id){
   const p=pkgs.find(x=>x.id===id);if(!p)return;
   if(durumda(id))return toast('Bu paket için zaten siparişin var.');
-  if(!buying||buying.id!==id){buying={id};kod=yeniKod();okS=false}
+  if(!buying||buying.id!==id){buying={id,fiyat:guncelFiyat(p)};kod=yeniKod();okS=false}else buying.fiyat=guncelFiyat(p);
   drawCart();view('cart');
 }
 async function order(){
@@ -751,8 +653,10 @@ async function order(){
   const p=buying&&pkgs.find(x=>x.id===buying.id);
   if(!p)return toast('Paket bulunamadı. Ana sayfadan tekrar dene.');
   if(durumda(p.id))return toast('Bu paket için zaten siparişin var.');
+  const gf=guncelFiyat(p);
+  if(gf!==buying.fiyat){buying.fiyat=gf;drawCart();return toast('Fiyat güncellendi: '+TL(gf)+'. Havale tutarını kontrol edip tekrar bas.')}
   try{
-    await addDoc(collection(db,'orders'),{uid:me.uid,kod,ad:prof.ad||'',email:prof.email||prof.kullanici||me.email,tel:prof.tel||'',kalemler:[{id:p.id,baslik:p.baslik,fiyat:fiyatOf(p)}],toplam:fiyatOf(p),durum:'bekliyor',ts:serverTimestamp()});
+    await addDoc(collection(db,'orders'),{uid:me.uid,kod,ad:prof.ad||'',email:prof.email||prof.kullanici||me.email,tel:prof.tel||'',kalemler:[{id:p.id,baslik:p.baslik,fiyat:gf}],toplam:gf,durum:'bekliyor',ts:serverTimestamp()});
     buying=null;kod=null;okS=false;toast('Siparişin alındı. Onay bekleniyor.');view('orders');
   }catch(x){toast(hata(x))}
 }
@@ -773,22 +677,22 @@ $$('.tab[data-t]').forEach(t=>t.addEventListener('click',()=>{
   ['pk','or','us','py','ad'].forEach(k=>$('#t-'+k).hidden=k!==t.dataset.t);
 }));
 function drawAdminPk(){
-  $('#adminPk').innerHTML=pkgs.length?pkgs.map(p=>`<div class="row"><div><strong>${esc(p.baslik)}</strong> ${p.yayin===false?'<span class="chip">Taslak</span>':''}<br><small>${TL(p.fiyat)}${flashOn(p)?` → ${TL(p.indirimFiyat)} flash`:''} · ${(p.gorseller||[]).length} görsel · ${({standart:'Standart',gumus:'Gümüş',gold:'Gold',premium:'Premium'})[frameOf(p)]} çerçeve${(p.etiketler||[]).length?` · ${p.etiketler.length} etiket`:''}</small>${p.indirimFiyat&&!flashOn(p)?' <span class="chip">Flash süresi doldu</span>':''}</div><div class="acts"><button class="btn s g" data-a="edit" data-id="${p.id}">Düzenle</button><button class="btn s d" data-a="del" data-id="${p.id}">Sil</button></div></div>`).join(''):'<span class="sm">Henüz paket yok.</span>';
+  $('#adminPk').innerHTML=pkgs.length?pkgs.map(p=>`<div class="row"><div><strong>${esc(p.baslik)}</strong> ${p.yayin===false?'<span class="chip">Taslak</span>':''}${indirimAktif(p)?' <span class="chip">İndirimde</span>':''}<br><small>${TL(p.fiyat)} · ${(p.gorseller||[]).length} görsel</small></div><div class="acts"><button class="btn s g" data-a="edit" data-id="${p.id}">Düzenle</button><button class="btn s d" data-a="del" data-id="${p.id}">Sil</button></div></div>`).join(''):'<span class="sm">Henüz paket yok.</span>';
 }
-function resetPk(){$('#pkForm').reset();resetDeco();$('#pid').value='';$('#pSave').textContent='Paketi ekle';$('#pReset').hidden=true}
+function resetPk(){$('#pkForm').reset();$('#pid').value='';$('#pSave').textContent='Paketi ekle';$('#pReset').hidden=true}
 $('#pReset').addEventListener('click',resetPk);
 form('#pkForm',async e=>{
   const d={yayin:$('#py').checked,baslik:$('#pt').value.trim(),aciklama:$('#pd').value.trim(),fiyat:Number($('#pf').value),gorseller:$('#pg').value.split('\n').map(s=>s.trim()).filter(s=>/^https?:\/\//i.test(s))};
-  let ifyat=null,ibit=null;
-  if($('#fl').checked){
-    ifyat=Number($('#fp').value);
-    if(!(ifyat>0)||ifyat>=d.fiyat)return toast('İndirimli fiyat 0’dan büyük ve normal fiyattan düşük olmalı.');
-    if($('#fm').value==='s'){
-      ibit=new Date($('#fb').value).getTime();
-      if(!ibit||ibit<=Date.now())return toast('Bitiş tarihi ve saati ileri bir zamanda olmalı.');
-    }
-  }
-  d.etiketler=ptags.slice(0,5);d.cerceve=$('#pc').value;d.indirimFiyat=ifyat;d.indirimBitis=ibit;
+  const tx=[...document.querySelectorAll('.et-t')],rk=[...document.querySelectorAll('.et-r')];
+  d.etiketler=tx.map((t,i)=>({m:t.value.trim(),r:rk[i].value})).filter(t=>t.m);
+  d.seviye=$('#ps').value;
+  const ip=$('#pif').value,ib=$('#pib').value;
+  if(ip!==''){
+    if(Number(ip)>=d.fiyat)return toast('İndirimli fiyat normal fiyattan düşük olmalı.');
+    const bt=ib?new Date(ib).getTime():null;
+    if(bt&&bt<=Date.now())return toast('İndirim bitiş zamanı gelecekte olmalı.');
+    d.indirim={fiyat:Number(ip),bitis:bt};
+  }else d.indirim=null;
   try{
     const id=$('#pid').value;
     const ic=$('#pi').value.trim();
@@ -892,7 +796,10 @@ document.addEventListener('click',async e=>{
     if(a==='buy')startBuy(id);
     else if(a==='copy'){await navigator.clipboard.writeText(b.dataset.c);toast('Kopyalandı.')}
     else if(a==='order')await order();
-    else if(a==='edit'){const p=pkgs.find(x=>x.id===id);$('#pid').value=id;$('#pt').value=p.baslik;$('#pd').value=p.aciklama;$('#pf').value=p.fiyat;$('#py').checked=p.yayin!==false;$('#pi').value=contents[id]||'';$('#pg').value=(p.gorseller||[]).join('\n');fillDeco(p);$('#pSave').textContent='Değişiklikleri kaydet';$('#pReset').hidden=false;$('#pkForm').scrollIntoView({behavior:'smooth'})}
+    else if(a==='edit'){const p=pkgs.find(x=>x.id===id);$('#pid').value=id;$('#pt').value=p.baslik;$('#pd').value=p.aciklama;$('#pf').value=p.fiyat;$('#py').checked=p.yayin!==false;
+      document.querySelectorAll('.et-t').forEach((t,i)=>{const e=(p.etiketler||[])[i];t.value=e?e.m:'';document.querySelectorAll('.et-r')[i].value=e?e.r:'kirmizi'});
+      $('#ps').value=p.seviye||'standart';$('#pif').value=p.indirim?p.indirim.fiyat:'';
+      $('#pib').value=p.indirim&&p.indirim.bitis?new Date(p.indirim.bitis-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16):'';$('#pi').value=contents[id]||'';$('#pg').value=(p.gorseller||[]).join('\n');$('#pSave').textContent='Değişiklikleri kaydet';$('#pReset').hidden=false;$('#pkForm').scrollIntoView({behavior:'smooth'})}
     else if(a==='del'){await deleteDoc(doc(db,'packages',id));await deleteDoc(doc(db,'contents',id));toast('Paket silindi.')}
     else if(a==='adel'){await deleteDoc(doc(db,'ads',id));toast('Reklam silindi.')}
     else if(a==='odel'){await deleteDoc(doc(db,'orders',id));toast('Sipariş silindi.')}
