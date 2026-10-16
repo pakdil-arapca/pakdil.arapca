@@ -442,7 +442,7 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
           <div class="w"><label for="pt">Paket adı</label><input id="pt" required></div>
           <div class="w"><label for="pd">Açıklama</label><textarea id="pd" rows="4" required></textarea></div>
           <div><label for="pf">Fiyat (TL)</label><input id="pf" type="number" min="0" step="0.01" required></div>
-          <div><label for="pc">Çerçeve seviyesi</label><select id="pc"><option value="standart">Standart</option><option value="gumus">Gümüş</option><option value="gold">Gold</option><option value="premium">Premium (gold + taç)</option></select></div>
+          <div><label for="pcr">Çerçeve seviyesi</label><select id="pcr"><option value="standart">Standart</option><option value="gumus">Gümüş</option><option value="gold">Gold</option><option value="premium">Premium (gold + taç)</option></select></div>
           <div class="w"><label for="tgT">Etiketler (en fazla 5, her biri farklı renkte olabilir)</label>
             <div class="tgbuild"><input id="tgT" maxlength="24" placeholder="Örn. Çok satan"><select id="tgC" aria-label="Etiket rengi"></select><button type="button" class="btn s g" id="tgAdd">Etiket ekle</button></div>
             <div class="tgprev" id="tgList"></div></div>
@@ -696,7 +696,7 @@ $('#fm').addEventListener('change',flBoxSync);
 function resetDeco(){ptags=[];drawTgList();flBoxSync()}
 function fillDeco(p){
   ptags=(p.etiketler||[]).filter(t=>t&&t.t).map(t=>({t:t.t,r:TAGC[t.r]?t.r:'red'}));drawTgList();
-  $('#pc').value=frameOf(p);
+  $('#pcr').value=frameOf(p);
   const on=Number(p.indirimFiyat)>0;
   $('#fl').checked=on;$('#fp').value=on?p.indirimFiyat:'';$('#fm').value=p.indirimBitis?'s':'u';
   if(p.indirimBitis){const dt=new Date(Number(p.indirimBitis));$('#fb').value=new Date(dt.getTime()-dt.getTimezoneOffset()*60000).toISOString().slice(0,16)}else $('#fb').value='';
@@ -790,7 +790,7 @@ form('#pkForm',async e=>{
       if(!ibit||ibit<=Date.now())return toast('Bitiş tarihi ve saati ileri bir zamanda olmalı.');
     }
   }
-  d.etiketler=ptags.slice(0,5);d.cerceve=$('#pc').value;d.indirimFiyat=ifyat;d.indirimBitis=ibit;
+  d.etiketler=ptags.slice(0,5);d.cerceve=$('#pcr').value;d.indirimFiyat=ifyat;d.indirimBitis=ibit;
   try{
     const id=$('#pid').value;
     const ic=$('#pi').value.trim();
