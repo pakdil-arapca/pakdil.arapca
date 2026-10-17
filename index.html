@@ -106,9 +106,9 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 10px}
 .dots{display:flex;justify-content:center;gap:8px;margin:12px 0 4px}
 .dot{width:10px;height:10px;border-radius:5px;border:0;background:#d4d4d4;cursor:pointer;transition:.3s}
 .dot.on{width:28px;background:var(--red)}
-.arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:1.3rem;cursor:pointer}
-.arrow:hover{background:var(--red)}
-.arrow.prev{left:12px}.arrow.next{right:12px}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:36px;border:0;background:none;color:#fff;font-size:1.5rem;line-height:1;text-shadow:0 1px 5px rgba(0,0,0,.8);cursor:pointer;padding:0}
+.arrow:hover{background:none;color:var(--red)}
+.arrow.prev{left:6px}.arrow.next{right:6px}
 
 /* eğitim bölümleri */
 .sec-title{margin:44px 0 6px;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800}
@@ -139,9 +139,9 @@ footer{margin-top:64px;background:var(--black);color:#fff;border-top:6px solid v
   .auth{grid-template-columns:1fr}
   .auth-art{order:-1;padding:30px 20px;min-height:200px}
   .art-ar{font-size:2.8rem}
-  .brand-name,.user span{display:none}
+  .user span{display:none}.brand-name{font-size:1.05rem;white-space:nowrap}
   .slider{aspect-ratio:16/8}
-  .arrow{width:32px;height:32px;font-size:1.1rem}
+  .arrow{width:22px;height:32px;font-size:1.3rem}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
@@ -331,7 +331,7 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
     <div class="topbar-in">
       <button class="menu-btn" id="menuBtn" aria-label="Menüyü aç" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="brand">
-        <div class="brand-chip"><img src="brand-logo.png" onerror="this.onerror=null;this.src='pakdil.logo.png'" alt="PaKdil AI"></div>
+        <div class="brand-chip"><img src="ev-logo.png" onerror="this.onerror=null;this.src='pakdil.logo.png'" alt="PaKdil AI"></div>
         <div class="brand-name">PaKdiL <b>AI</b></div>
       </div>
       <div class="user"><span id="who"></span><button id="logout">Çıkış yap</button></div>
