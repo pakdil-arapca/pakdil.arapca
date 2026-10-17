@@ -106,7 +106,7 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 10px}
 .dots{display:flex;justify-content:center;gap:8px;margin:12px 0 4px}
 .dot{width:10px;height:10px;border-radius:5px;border:0;background:#d4d4d4;cursor:pointer;transition:.3s}
 .dot.on{width:28px;background:var(--red)}
-.arrow{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:36px;border:0;background:none;color:#fff;font-size:1.5rem;line-height:1;text-shadow:0 1px 5px rgba(0,0,0,.8);cursor:pointer;padding:0}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:56px;border:0;background:none;color:#fff;font-size:2.8rem;line-height:1;text-shadow:0 1px 5px rgba(0,0,0,.8);cursor:pointer;padding:0}
 .arrow:hover{background:none;color:var(--red)}
 .arrow.prev{left:6px}.arrow.next{right:6px}
 
@@ -141,7 +141,7 @@ footer{margin-top:64px;background:var(--black);color:#fff;border-top:6px solid v
   .art-ar{font-size:2.8rem}
   .user span{display:none}.brand-name{font-size:1.05rem;white-space:nowrap}
   .slider{aspect-ratio:16/8}
-  .arrow{width:22px;height:32px;font-size:1.3rem}
+  .arrow{width:32px;height:48px;font-size:2.2rem}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
@@ -270,6 +270,8 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 .vnote{background:#fff1c9;border-radius:12px;padding:10px 14px;font-size:.88rem;margin-bottom:14px}
 .pk-b p.cl{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;flex:0 0 auto}
 .more{align-self:flex-start;background:none;border:0;padding:0;margin-top:-2px;color:var(--red);font:700 .88rem var(--f,inherit);cursor:pointer}
+.adrow{flex-wrap:wrap}
+.adrow .btn.s{padding:5px 10px;font-size:.78rem;min-width:0;line-height:1.2}
 </style>
 </head>
 <body>
@@ -331,7 +333,7 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
     <div class="topbar-in">
       <button class="menu-btn" id="menuBtn" aria-label="Menüyü aç" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="brand">
-        <div class="brand-chip"><img src="brand-logo.png" onerror="this.onerror=null;this.src='pakdil.logo.png'" alt="PaKdil AI"></div>
+        <div class="brand-chip"><img src="ev-logo.png" onerror="this.onerror=null;this.src='pakdil.logo.png'" alt="PaKdil AI"></div>
         <div class="brand-name">PaKdiL <b>AI</b></div>
       </div>
       <div class="user"><span id="who"></span><button id="logout">Çıkış yap</button></div>
@@ -822,7 +824,7 @@ function drawAdminUs(){
   </div>`).join(''):'<div class="empty" style="margin-top:20px">Henüz kullanıcı yok.</div>';
 }
 function drawAdminAds(){
-  $('#adminAds').innerHTML=ads.length?ads.map((a,i)=>`<div class="row"><div style="display:flex;gap:12px;align-items:center;min-width:0"><img src="${esc(a.gorsel)}" alt="" style="width:84px;height:34px;object-fit:cover;border-radius:6px;flex:none;background:#eee"><div style="min-width:0"><strong>Reklam ${i+1}</strong><br><small style="word-break:break-all">${a.link?esc(a.link):'Bağlantı yok'}</small></div></div><div style="display:flex;gap:6px;flex:none"><button class="btn s g" style="padding:8px 12px" data-a="aup" data-id="${a.id}" aria-label="Yukarı al" ${i===0?'disabled':''}>&#9650;</button><button class="btn s g" style="padding:8px 12px" data-a="adown" data-id="${a.id}" aria-label="Aşağı al" ${i===ads.length-1?'disabled':''}>&#9660;</button><button class="btn s d" data-a="adel" data-id="${a.id}">Sil</button></div></div>`).join(''):'<span class="sm">Henüz reklam yok.</span>';
+  $('#adminAds').innerHTML=ads.length?ads.map((a,i)=>`<div class="row adrow"><div style="display:flex;gap:12px;align-items:center;min-width:0;flex:1 1 200px"><img src="${esc(a.gorsel)}" alt="" style="width:84px;height:34px;object-fit:cover;border-radius:6px;flex:none;background:#eee"><div style="min-width:0"><strong>Reklam ${i+1}</strong><br><small style="word-break:break-all">${a.link?esc(a.link):'Bağlantı yok'}</small></div></div><div style="display:flex;gap:6px;flex:none;margin-left:auto"><button class="btn s g" data-a="aup" data-id="${a.id}" aria-label="Yukarı al" ${i===0?'disabled':''}>&#9650;</button><button class="btn s g" data-a="adown" data-id="${a.id}" aria-label="Aşağı al" ${i===ads.length-1?'disabled':''}>&#9660;</button><button class="btn s d" data-a="adel" data-id="${a.id}">Sil</button></div></div>`).join(''):'<span class="sm">Henüz reklam yok.</span>';
 }
 form('#adForm',async()=>{
   const g=$('#ai').value.trim(),l=$('#al').value.trim();
