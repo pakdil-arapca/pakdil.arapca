@@ -270,8 +270,6 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 .vnote{background:#fff1c9;border-radius:12px;padding:10px 14px;font-size:.88rem;margin-bottom:14px}
 .pk-b p.cl{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;flex:0 0 auto}
 .more{align-self:flex-start;background:none;border:0;padding:0;margin-top:-2px;color:var(--red);font:700 .88rem var(--f,inherit);cursor:pointer}
-.drag{flex:none;cursor:grab;touch-action:none;user-select:none;color:var(--mute);font-size:1.3rem;line-height:1;padding:8px 6px;letter-spacing:-3px}
-.adrow.dr{opacity:.65;background:#f4f4f4}
 </style>
 </head>
 <body>
@@ -824,20 +822,8 @@ function drawAdminUs(){
   </div>`).join(''):'<div class="empty" style="margin-top:20px">Henüz kullanıcı yok.</div>';
 }
 function drawAdminAds(){
-  $('#adminAds').innerHTML=ads.length?ads.map((a,i)=>`<div class="row adrow" data-id="${a.id}"><div style="display:flex;gap:12px;align-items:center;min-width:0"><span class="drag" title="Sıralamak için basılı tutup sürükle" aria-label="Sürükle">&#8942;&#8942;</span><img src="${esc(a.gorsel)}" alt="" style="width:84px;height:34px;object-fit:cover;border-radius:6px;flex:none;background:#eee"><div style="min-width:0"><strong>Reklam ${i+1}</strong><br><small style="word-break:break-all">${a.link?esc(a.link):'Bağlantı yok'}</small></div></div><button class="btn s d" data-a="adel" data-id="${a.id}">Sil</button></div>`).join(''):'<span class="sm">Henüz reklam yok.</span>';
+  $('#adminAds').innerHTML=ads.length?ads.map((a,i)=>`<div class="row"><div style="display:flex;gap:12px;align-items:center;min-width:0"><img src="${esc(a.gorsel)}" alt="" style="width:84px;height:34px;object-fit:cover;border-radius:6px;flex:none;background:#eee"><div style="min-width:0"><strong>Reklam ${i+1}</strong><br><small style="word-break:break-all">${a.link?esc(a.link):'Bağlantı yok'}</small></div></div><div style="display:flex;gap:6px;flex:none"><button class="btn s g" style="padding:8px 12px" data-a="aup" data-id="${a.id}" aria-label="Yukarı al" ${i===0?'disabled':''}>&#9650;</button><button class="btn s g" style="padding:8px 12px" data-a="adown" data-id="${a.id}" aria-label="Aşağı al" ${i===ads.length-1?'disabled':''}>&#9660;</button><button class="btn s d" data-a="adel" data-id="${a.id}">Sil</button></div></div>`).join(''):'<span class="sm">Henüz reklam yok.</span>';
 }
-$('#adminAds').addEventListener('pointerdown',e=>{
-  const h=e.target.closest('.drag');if(!h)return;e.preventDefault();
-  const box=$('#adminAds'),row=h.closest('.adrow'),eski=[...box.children].map(r=>r.dataset.id).join();
-  row.classList.add('dr');h.setPointerCapture(e.pointerId);
-  const mv=ev=>{const t=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.adrow');
-    if(t&&t!==row&&t.parentNode===box){const r=t.getBoundingClientRect();box.insertBefore(row,ev.clientY<r.top+r.height/2?t:t.nextSibling)}};
-  const up=async()=>{h.removeEventListener('pointermove',mv);h.removeEventListener('pointerup',up);h.removeEventListener('pointercancel',up);row.classList.remove('dr');
-    const ids=[...box.children].map(r=>r.dataset.id);
-    if(ids.join()===eski)return;
-    try{await Promise.all(ids.map((id,i)=>updateDoc(doc(db,'ads',id),{sira:i})));toast('Sıra kaydedildi.')}catch(x){toast(hata(x));drawAdminAds()}};
-  h.addEventListener('pointermove',mv);h.addEventListener('pointerup',up);h.addEventListener('pointercancel',up);
-});
 form('#adForm',async()=>{
   const g=$('#ai').value.trim(),l=$('#al').value.trim();
   if(!/^https?:\/\//i.test(g))return toast('Görsel bağlantısı http ile başlamalı.');
@@ -927,6 +913,12 @@ document.addEventListener('click',async e=>{
     else if(a==='order')await order();
     else if(a==='edit'){const p=pkgs.find(x=>x.id===id);$('#pid').value=id;$('#pt').value=p.baslik;$('#pd').value=p.aciklama;$('#pf').value=p.fiyat;$('#py').checked=p.yayin!==false;$('#pi').value=contents[id]||'';$('#pg').value=(p.gorseller||[]).join('\n');fillDeco(p);$('#pSave').textContent='Değişiklikleri kaydet';$('#pReset').hidden=false;$('#pkForm').scrollIntoView({behavior:'smooth'})}
     else if(a==='del'){await deleteDoc(doc(db,'packages',id));await deleteDoc(doc(db,'contents',id));toast('Paket silindi.')}
+    else if(a==='aup'||a==='adown'){
+      const i=ads.findIndex(x=>x.id===id),j=a==='aup'?i-1:i+1;
+      if(i<0||j<0||j>=ads.length)return;
+      const ids=ads.map(x=>x.id);[ids[i],ids[j]]=[ids[j],ids[i]];
+      try{await Promise.all(ids.map((x,k)=>updateDoc(doc(db,'ads',x),{sira:k})))}catch(x){toast(hata(x))}
+    }
     else if(a==='adel'){await deleteDoc(doc(db,'ads',id));toast('Reklam silindi.')}
     else if(a==='odel'){await deleteDoc(doc(db,'orders',id));toast('Sipariş silindi.')}
     else if(a==='st'){await setStatus(id,b.dataset.s)}
