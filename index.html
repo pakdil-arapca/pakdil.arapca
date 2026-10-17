@@ -102,9 +102,10 @@ main{max-width:1180px;margin:0 auto;padding:26px 20px 10px}
 .slide h3{font-size:1.5rem}
 .slide p{opacity:.85;font-size:.9rem}
 .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:8px}
-.dot{width:10px;height:10px;border-radius:5px;border:0;background:rgba(255,255,255,.55);cursor:pointer;transition:.3s}
-.dot.on{width:28px;background:#fff}
+.slider.has-img{aspect-ratio:16/7;min-height:0;max-height:440px}
+.dots{display:flex;justify-content:center;gap:8px;margin:12px 0 4px}
+.dot{width:10px;height:10px;border-radius:5px;border:0;background:#d4d4d4;cursor:pointer;transition:.3s}
+.dot.on{width:28px;background:var(--red)}
 .arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:1.3rem;cursor:pointer}
 .arrow:hover{background:var(--red)}
 .arrow.prev{left:12px}.arrow.next{right:12px}
@@ -140,8 +141,7 @@ footer{margin-top:64px;background:var(--black);color:#fff;border-top:6px solid v
   .art-ar{font-size:2.8rem}
   .brand-name,.user span{display:none}
   .slider{aspect-ratio:16/8}
-  .slider.has-img{aspect-ratio:16/5;min-height:0}
-  .slider.has-img .slide img{object-fit:contain}
+  .arrow{width:32px;height:32px;font-size:1.1rem}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
@@ -360,8 +360,8 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
         <div class="track" id="track"></div>
         <button class="arrow prev" id="prev" aria-label="Önceki">&#8249;</button>
         <button class="arrow next" id="next" aria-label="Sonraki">&#8250;</button>
-        <div class="dots" id="dots"></div>
       </div>
+      <div class="dots" id="dots"></div>
 
       <h2 class="sec-title">Eğitim paketleri</h2>
       <p class="sec-sub">Paketi seç, “Satın al”a bas, ödemeyi havale ile yap. Siparişin onaylanınca içerik bağlantın Paketlerim bölümüne eklenir.</p>
