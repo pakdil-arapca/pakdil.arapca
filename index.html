@@ -270,6 +270,8 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 .vnote{background:#fff1c9;border-radius:12px;padding:10px 14px;font-size:.88rem;margin-bottom:14px}
 .pk-b p.cl{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;flex:0 0 auto}
 .more{align-self:flex-start;background:none;border:0;padding:0;margin-top:-2px;color:var(--red);font:700 .88rem var(--f,inherit);cursor:pointer}
+.drag{flex:none;cursor:grab;touch-action:none;user-select:none;color:var(--mute);font-size:1.3rem;line-height:1;padding:8px 6px;letter-spacing:-3px}
+.adrow.dr{opacity:.65;background:#f4f4f4}
 </style>
 </head>
 <body>
@@ -600,7 +602,7 @@ onAuthStateChanged(auth,u=>{
     pkgs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.ts?.seconds||0)-(a.ts?.seconds||0));drawPk();drawAdminPk();
     if(isAdmin)s.docs.filter(d=>d.data().yayin===undefined).forEach(d=>updateDoc(d.ref,{yayin:true}).catch(()=>{})); // eski paketler yayında sayılsın
   });
-  sub(collection(db,'ads'),s=>{ads=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.ts?.seconds||0)-(b.ts?.seconds||0));drawSlider();drawAdminAds()});
+  sub(collection(db,'ads'),s=>{ads=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>((a.sira??1e9)-(b.sira??1e9))||((a.ts?.seconds||0)-(b.ts?.seconds||0)));drawSlider();drawAdminAds()});
   sub(doc(db,'settings','payment'),s=>{if(s.exists())pay={...pay,...s.data()};drawCart();fillPay();drawContact()});
   sub(doc(db,'users',u.uid),s=>{prof=s.data()||{};if(prof.ad)$('#who').textContent=$('#who2').textContent=prof.ad;drawCart();drawPk()});
   sub(query(collection(db,'orders'),where('uid','==',u.uid)),s=>{myOrders=s.docs.map(d=>({id:d.id,...d.data()}));drawMyOrders();drawMine();drawPk();drawCart()});
@@ -822,8 +824,20 @@ function drawAdminUs(){
   </div>`).join(''):'<div class="empty" style="margin-top:20px">Henüz kullanıcı yok.</div>';
 }
 function drawAdminAds(){
-  $('#adminAds').innerHTML=ads.length?ads.map((a,i)=>`<div class="row"><div style="display:flex;gap:12px;align-items:center;min-width:0"><img src="${esc(a.gorsel)}" alt="" style="width:84px;height:34px;object-fit:cover;border-radius:6px;flex:none;background:#eee"><div style="min-width:0"><strong>Reklam ${i+1}</strong><br><small style="word-break:break-all">${a.link?esc(a.link):'Bağlantı yok'}</small></div></div><button class="btn s d" data-a="adel" data-id="${a.id}">Sil</button></div>`).join(''):'<span class="sm">Henüz reklam yok.</span>';
+  $('#adminAds').innerHTML=ads.length?ads.map((a,i)=>`<div class="row adrow" data-id="${a.id}"><div style="display:flex;gap:12px;align-items:center;min-width:0"><span class="drag" title="Sıralamak için basılı tutup sürükle" aria-label="Sürükle">&#8942;&#8942;</span><img src="${esc(a.gorsel)}" alt="" style="width:84px;height:34px;object-fit:cover;border-radius:6px;flex:none;background:#eee"><div style="min-width:0"><strong>Reklam ${i+1}</strong><br><small style="word-break:break-all">${a.link?esc(a.link):'Bağlantı yok'}</small></div></div><button class="btn s d" data-a="adel" data-id="${a.id}">Sil</button></div>`).join(''):'<span class="sm">Henüz reklam yok.</span>';
 }
+$('#adminAds').addEventListener('pointerdown',e=>{
+  const h=e.target.closest('.drag');if(!h)return;e.preventDefault();
+  const box=$('#adminAds'),row=h.closest('.adrow'),eski=[...box.children].map(r=>r.dataset.id).join();
+  row.classList.add('dr');h.setPointerCapture(e.pointerId);
+  const mv=ev=>{const t=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.adrow');
+    if(t&&t!==row&&t.parentNode===box){const r=t.getBoundingClientRect();box.insertBefore(row,ev.clientY<r.top+r.height/2?t:t.nextSibling)}};
+  const up=async()=>{h.removeEventListener('pointermove',mv);h.removeEventListener('pointerup',up);h.removeEventListener('pointercancel',up);row.classList.remove('dr');
+    const ids=[...box.children].map(r=>r.dataset.id);
+    if(ids.join()===eski)return;
+    try{await Promise.all(ids.map((id,i)=>updateDoc(doc(db,'ads',id),{sira:i})));toast('Sıra kaydedildi.')}catch(x){toast(hata(x));drawAdminAds()}};
+  h.addEventListener('pointermove',mv);h.addEventListener('pointerup',up);h.addEventListener('pointercancel',up);
+});
 form('#adForm',async()=>{
   const g=$('#ai').value.trim(),l=$('#al').value.trim();
   if(!/^https?:\/\//i.test(g))return toast('Görsel bağlantısı http ile başlamalı.');
@@ -845,14 +859,14 @@ async function setStatus(id,durum){
 const DOCS={
 hakkimizda:{t:'Hakkımızda',h:`<p>Merhaba, ben Ahmet Altındağ. Konya Necmettin Erbakan Üniversitesi Arapça Öğretmenliği bölümünden mezun oldum. Yaklaşık 7 yıldır online ve yüz yüze Arapça eğitimi veriyor, bugüne kadar 100’den fazla öğrencinin Arapça öğrenme yolculuğuna eşlik ediyorum.</p>
 <p>Arapçaya olan ilgim ve öğretme tutkum, bu dili daha kolay, anlaşılır ve herkes için ulaşılabilir hâle getirme hedefiyle birleşti. Benim için öğretmenlik yalnızca bir meslek değil, aynı zamanda severek yaptığım ve gönülden bağlı olduğum bir iş. Hâlihazırda Arapça üzerine akademik çalışmalar, makaleler ve araştırmalar yürütüyor; kendimi geliştirmeye ve eğitim yöntemlerini iyileştirmeye devam ediyorum.</p>
-<p>Peki, Arapça öğrenmek gerçekten zor mu?</p>
+<p><b>Peki, Arapça öğrenmek gerçekten zor mu?</b></p>
 <p>Bence Arapça, doğru yöntem ve düzenli pratikle öğrenilebilir bir dildir. Önemli olan yalnızca kelimeleri ve dil bilgisi kurallarını ezberlemek değil, öğrendiklerinizi günlük hayatta kullanabilmektir. Bunun için de size uygun bir eğitim planına, düzenli konuşma pratiğine ve gelişiminizi takip edebileceğiniz bir sisteme ihtiyacınız var.</p>
 <p>İşte tam bu noktada yapay zekâ destekli Arapça eğitim modelimizi geliştirmek için çalışıyoruz. Amacımız, Arapçayı gözünüzde büyütmeden öğrenmenizi; seviyenize, hedeflerinize ve ilgi alanlarınıza uygun bir şekilde ilerlemenizi sağlamak. Yapay zekâ desteğiyle kişiselleştirilmiş öğrenme planları oluşturmayı, her gün pratik yapmanızı ve konuşurken yaptığınız hataları fark ederek kendinizi geliştirmenizi hedefliyoruz.</p>
 <p>Çünkü Arapça öğrenmek için her zaman saatlerce ders çalışmanız veya sürekli bir öğretmenin yanında olmanız gerekmiyor. Önemli olan, kendinize uygun bir yöntem belirlemek ve istikrarlı bir şekilde devam etmek. Her gün ayıracağınız 20 dakikalık bilinçli bir çalışma bile öğrenme yolculuğunuzda değerli bir adım olabilir.</p>
 <p>Şimdi kendinize bir söz verin: “Ben Arapça öğrenebilirim ve bunun için bugün bir adım atacağım.”</p>
 <p>Kendinize bu fırsatı tanıyın. Yeni bir yöntem deneyin, her gün biraz pratik yapın ve gelişiminizi kendi gözlerinizle görün. Arapçayı öğrenmeyi sürekli ertelemek yerine bugün başlayın.</p>
 <p>Biz de bu yolculukta size rehberlik etmek, Arapçayı daha kolay ve keyifli hâle getirmek için buradayız.</p>
-<p>PaKdiL AI — Arapçayı sadece öğrenmeniz değil, konuşabilmeniz için.</p>`},
+<p><i>PaKdiL AI — Arapçayı sadece öğrenmeniz değil, konuşabilmeniz için.</i></p>`},
 satis:{t:'Mesafeli Satış Sözleşmesi ve İade Koşulları',h:`<p><b>1. TARAFLAR</b><br>Satıcı: Ahmet ALTINDAĞ - İletişim: pakdilarapca@gmail.com<br>Alıcı: Sitede kayıtlı bulunan ve sipariş oluşturan kullanıcı.</p>
 <p><b>2. KONU VE HİZMETİN TESLİMİ</b><br>Bu sözleşmenin konusu, Satıcı'nın Alıcı'ya dijital ortamda sunduğu eğitim paketlerinin satış ve teslim koşullarının belirlenmesidir.</p>
 <p>Alıcı, seçtiği paketin ücretini belirtilen IBAN hesabına (Açıklama kısmına istenen sipariş kodunu/ismini yazarak) gönderdikten sonra sipariş işleme alınır. Ödeme onayı Satıcı tarafından verildikten sonra, eğitime ait dijital içerik bağlantıları Alıcı'nın hesabındaki "Paketlerim" sekmesine tanımlanır ve teslimat gerçekleşmiş sayılır.</p>
