@@ -806,7 +806,8 @@ form('#pkForm',async e=>{
   try{
     const id=$('#pid').value;
     const ic=$('#pi').value.trim();
-    if(ic&&!/^https?:\/\//i.test(ic))return toast('İçerik bağlantısı http ile başlamalı.');
+    const kotu=ic.split(/\r?\n/).map(x=>x.trim()).filter(x=>x&&x[0]!=='#').find(x=>!/^https?:\/\//i.test(x.slice(x.lastIndexOf('|')+1).trim()));
+    if(kotu)return toast('Şu satırda geçerli bağlantı yok (https:// ile başlamalı): '+kotu.slice(0,40));
     let pid=id;
     if(id)await updateDoc(doc(db,'packages',id),d);else pid=(await addDoc(collection(db,'packages'),{...d,ts:serverTimestamp()})).id;
     await setDoc(doc(db,'contents',pid),{link:ic});
