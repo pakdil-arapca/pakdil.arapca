@@ -70,8 +70,8 @@ input:focus{border-color:var(--red);outline:none;box-shadow:0 0 0 4px rgba(200,1
 .brand-name{font-weight:800;font-size:1.25rem;letter-spacing:.02em}
 .brand-name b{color:var(--red)}
 .user{font-size:.9rem;display:flex;align-items:center;gap:12px}
-.user button{background:transparent;border:1.5px solid #fff;color:#fff;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer;transition:.2s}
-.user button:hover{background:#fff;color:#000}
+.user #logout{background:transparent;border:1.5px solid #fff;color:#fff;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer;transition:.2s}
+.user #logout:hover{background:#fff;color:#000}
 
 /* yan panel */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;opacity:0;pointer-events:none;transition:.25s}
@@ -272,7 +272,37 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 .more{align-self:flex-start;background:none;border:0;padding:0;margin-top:-2px;color:var(--red);font:700 .88rem var(--f,inherit);cursor:pointer}
 .adrow{flex-wrap:wrap}
 .adrow .btn.s{padding:5px 10px;font-size:.78rem;min-width:0;line-height:1.2}
+
+/* tema düğmesi + karanlık tema */
+.thm{flex:none;width:44px;height:44px;display:grid;place-items:center;background:none;border:0;padding:0;color:inherit;cursor:pointer;border-radius:50%;-webkit-tap-highlight-color:transparent}
+.thm:hover{color:var(--red)}.thm svg{width:28px;height:28px;overflow:visible}
+.topbar .thm{color:#fff}.topbar .thm:hover{color:#ff5b73}
+.thm-row{display:flex;justify-content:center;margin-top:10px}
+.tkart{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}.tkart .thm{pointer-events:none;color:var(--red)}.tkart div{display:flex;flex-direction:column}
+.thm .sun,.thm .beams{transform-origin:center;transform-box:fill-box}
+.thm .sun{transition:transform .5s cubic-bezier(.5,1.25,.75,1.25)}.thm .beams{transition:transform .5s cubic-bezier(.5,1.5,.75,1.25),opacity .3s}
+.thm .mc{transition:transform .4s ease-out}
+[data-theme=dark] .thm .sun{transform:scale(1.7)}
+[data-theme=dark] .thm .beams{transform:rotate(-25deg) scale(.4);opacity:0}
+[data-theme=dark] .thm .mc{transform:translate(-7px,-3px)}
+@media(prefers-reduced-motion:reduce){.thm *{transition:none!important}}
+:root[data-theme=dark]{--line:#2c2c34;--mute:#a4a1ab;--soft:#1c1c22;color-scheme:dark}
+[data-theme=dark] body{background:#0e0e12;color:#f2efe8}
+[data-theme=dark] input,[data-theme=dark] textarea,[data-theme=dark] select{background:#17171c;border-color:#34343d;color:#f2efe8}
+[data-theme=dark] .drawer,[data-theme=dark] .kart,[data-theme=dark] .topic,[data-theme=dark] .pk,[data-theme=dark] .card,[data-theme=dark] .ask-b,[data-theme=dark] .btn.d{background:#17171c;color:#f2efe8}
+[data-theme=dark] .btn.d{color:var(--red)}
+[data-theme=dark] .btn.g{background:#17171c;color:#f2efe8;border-color:#55555f}
+[data-theme=dark] .kart:hover{border-color:var(--red)}[data-theme=dark] .kart:nth-child(even){border-left-color:#f2efe8}
+[data-theme=dark] .tab[aria-selected="true"],[data-theme=dark] .welcome b,[data-theme=dark] .msg.ok{color:#fff}
+[data-theme=dark] .pk.f-gumus{background:linear-gradient(#17171c,#17171c) padding-box,linear-gradient(135deg,#f7f9fb,#9aa4b2 28%,#eef1f5 50%,#7d8896 76%,#e3e8ee) border-box;box-shadow:0 10px 26px rgba(0,0,0,.5)}
+[data-theme=dark] .pk.f-gold{background:linear-gradient(#17171c,#17171c) padding-box,linear-gradient(135deg,#fff1a8,#e6b422 28%,#fff0a0 50%,#c68a00 76%,#f6d365) border-box;box-shadow:0 12px 32px rgba(214,160,20,.22)}
+[data-theme=dark] .pk.f-premium{background:linear-gradient(#17171c,#17171c) padding-box,conic-gradient(from var(--ang),#fff1a8,#e6b422,#8a5a00,#ffe27a,#e6b422,#fff1a8) border-box;box-shadow:0 16px 44px rgba(214,160,20,.25)}
+[data-theme=dark] .pk.f-premium .pk-b{background:linear-gradient(#17171c,#1c1a14)}
+[data-theme=dark] .vnote{background:#3a2f12;color:#f6e6b4}[data-theme=dark] .flbox{background:#241a10}[data-theme=dark] .dot:not(.on){background:#3a3a44}
+[data-theme=dark] body.admin{--red:#4d86ee;--red-d:#3a6ccc}
+[data-theme=dark] .chip{color:#1a1306}[data-theme=dark] .empty{border-color:#3a3a44}
 </style>
+<script>try{var t=localStorage.getItem("pk-tema-ana");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
 <body>
 
@@ -318,6 +348,7 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
         <button class="lnk" type="button" id="fback">Girişe dön</button>
       </form>
       <p class="msg" id="msg" role="alert"></p>
+      <div class="thm-row"><button class="thm" aria-label="Aydınlık / karanlık tema" title="Tema"></button></div>
     </div>
   </div>
   <div class="auth-art">
@@ -351,6 +382,7 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
       <button class="kart" data-v="admin" id="adminLink" hidden><strong>Yönetim paneline dön</strong><span>Admin ekranına geri dön</span></button>
       <button class="kart" id="prevLink" data-v="preview" hidden><strong>Kullanıcı gözüyle bak</strong><span>Siteyi öğrenci olarak gör</span></button>
       <button class="kart" id="dSet" data-v="set"><strong>Ayarlar</strong><span>Şifre ve hesap bilgilerin</span></button>
+      <button class="kart tkart" id="dTema" type="button" data-tt="1"><div><strong>Görünüm</strong><span>Aydınlık / karanlık tema</span></div><span class="thm" aria-hidden="true"></span></button>
     </div>
   </aside>
 
@@ -958,6 +990,15 @@ function restart(){stopSlider();if(count()>1)timer=setInterval(()=>go(idx+1),500
 dots.addEventListener('click',e=>{const d=e.target.closest('.dot');if(d){go(+d.dataset.i);restart()}});
 $('#prev').onclick=()=>{go(idx-1);restart()};
 $('#next').onclick=()=>{go(idx+1);restart()};
+</script>
+<script>
+(function(){
+var b=document.querySelectorAll('.thm');var tt=document.querySelectorAll('[data-tt],.thm-row .thm');
+b.forEach(function(el,n){el.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><mask id="mkm'+n+'"><rect x="-4" y="-4" width="32" height="32" fill="#fff"/><circle class="mc" cx="24" cy="10" r="6" fill="#000"/></mask><circle class="sun" cx="12" cy="12" r="6" mask="url(#mkm'+n+')" fill="currentColor"/><g class="beams" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></g></svg>';
+ });
+tt.forEach(function(el){el.addEventListener('click',function(){var t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('pk-tema-ana',t)}catch(e){}})});
+if(!document.documentElement.dataset.theme)document.documentElement.dataset.theme='light';
+})();
 </script>
 </body>
 </html>
