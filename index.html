@@ -308,6 +308,9 @@ body.admin .thm{color:#2f6fe0}
 .drawer .kart{background:rgba(255,255,255,.5)}
 [data-theme=dark] .drawer{background:rgba(14,14,18,.58)}
 [data-theme=dark] .drawer .kart{background:rgba(32,32,38,.5)}
+.logo-d{display:none}
+[data-theme=dark] .logo-d{display:block}
+[data-theme=dark] .logo-l{display:none}
 </style>
 <script>try{var t=localStorage.getItem("pk-tema-ana");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
@@ -317,7 +320,8 @@ body.admin .thm{color:#2f6fe0}
 <section class="auth" id="auth" hidden>
   <div class="auth-form">
     <div class="auth-box">
-      <img class="auth-logo" src="giris-logo.png" onerror="this.onerror=null;this.src='pakdil.logo.png'" alt="PaKdil AI logosu">
+      <img class="auth-logo logo-l" src="giris-logo.png" onerror="this.onerror=null;this.src='pakdil.logo.png'" alt="PaKdil AI logosu">
+      <img class="auth-logo logo-d" src="giris-logo-koyu.png" onerror="this.onerror=null;this.src='giris-logo.png'" alt="PaKdil AI logosu">
       <div class="tabs" role="tablist">
         <button class="tab" role="tab" id="tab-login" aria-selected="true" data-tab="login">Giriş yap</button>
         <button class="tab" role="tab" id="tab-reg" aria-selected="false" data-tab="reg">Kayıt ol</button>
