@@ -155,7 +155,7 @@ footer{margin-top:64px;background:var(--black);color:#fff;border-top:6px solid v
 .lnk{background:none;border:0;color:var(--red);font-weight:600;cursor:pointer;margin-top:14px;padding:0;font-size:.85rem}
 textarea,select{width:100%;padding:13px 14px;border:1.5px solid #d9d9d9;border-radius:10px;background:#fff;font:inherit;resize:vertical}
 textarea:focus,select:focus{border-color:var(--red);outline:none;box-shadow:0 0 0 4px rgba(200,16,46,.12)}
-.tabs.t4{grid-template-columns:repeat(5,auto);overflow-x:auto}.tab{white-space:nowrap}
+.tabs.t4{grid-template-columns:repeat(6,auto);overflow-x:auto}.tab{white-space:nowrap}
 .view{padding-bottom:8px}
 .pk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .pk{border:1.5px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
@@ -312,6 +312,17 @@ body.admin .thm{color:#2f6fe0}
 [data-theme=dark] .logo-d{display:block}
 [data-theme=dark] .logo-l{display:none}
 .drawer-head{justify-content:flex-start}.drawer-head .thm-in{margin-left:14px}.drawer-head .close{margin-left:auto}
+.ocard{padding:0;border:2px solid #8c8c96;overflow:hidden}
+.ocard.s-onaylandı{box-shadow:inset 7px 0 0 #1f9d55}.ocard.s-bekliyor{box-shadow:inset 7px 0 0 #e0a800}.ocard.s-iptal{box-shadow:inset 7px 0 0 #c8102e}
+.ohd{display:flex;align-items:center;gap:10px;padding:14px 16px 14px 22px;cursor:pointer}.otx{flex:1;min-width:0}.otx strong,.otx small{display:block}.otx small{color:var(--mute);font-size:.84rem}
+.obd{padding:0 16px 16px 22px;border-top:1px solid var(--line)}
+.och{flex:none;font-size:1.2rem;color:var(--red);transition:.2s}.ocard.open .och{transform:rotate(180deg)}
+[data-theme=dark] .ocard{border-color:#5a5a66}
+.icrow{cursor:pointer}.icrow.on strong{color:var(--red)}.icrow .och{font-size:1.5rem}
+.vc{border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-top:12px}
+.vc input{margin-top:8px}.vh{display:flex;align-items:center;gap:8px}.vh b{flex:1}
+.pr{margin-top:10px;padding:10px;border-left:3px solid var(--red);background:var(--soft);border-radius:0 10px 10px 0}.pr .btn{margin-top:8px}
+.vh b{white-space:nowrap}
 </style>
 <script>try{var t=localStorage.getItem("pk-tema-ana");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
@@ -480,6 +491,7 @@ body.admin .thm{color:#2f6fe0}
       <p class="vnote" id="aAlert" role="button" tabindex="0" style="margin-top:14px;cursor:pointer" hidden></p>
       <div class="tabs t4" style="margin-top:20px">
         <button class="tab" data-t="pk" aria-selected="true">Paketler</button>
+        <button class="tab" data-t="ic" aria-selected="false">İçerik</button>
         <button class="tab" data-t="or" aria-selected="false">Siparişler<b id="pc"></b></button>
         <button class="tab" data-t="us" aria-selected="false">Kullanıcılar</button>
         <button class="tab" data-t="py" aria-selected="false">Ödeme</button>
@@ -502,14 +514,14 @@ body.admin .thm{color:#2f6fe0}
               <div><label for="fm">İndirim türü</label><select id="fm"><option value="s">Süreli (geri sayımlı)</option><option value="u">Süresiz (ben kapatana kadar)</option></select></div>
               <div id="fbW"><label for="fb">Bitiş tarihi ve saati</label><input id="fb" type="datetime-local"></div>
             </div></div>
-          <div class="w"><label for="pi">İçerik listesi (sadece satın alanlar görür). Her satır: Başlık | Bağlantı. "# Bölüm adı" bölüm başlığıdır.</label><textarea id="pi" rows="5" placeholder="# Bölüm 1&#10;Ders 1 | https://youtu.be/...&#10;Çalışma kâğıdı | https://drive.google.com/..."></textarea></div>
           <div class="w"><label for="pg">Görsel bağlantıları (her satıra bir tane)</label><textarea id="pg" rows="3" placeholder="https://i.ibb.co/..."></textarea></div>
           <div class="w"><label class="chk"><input type="checkbox" id="py" checked><span>Yayında (herkes görsün). İşareti kaldırırsan taslak olur, sadece sen görürsün.</span></label></div>
           <div class="w acts" style="margin-top:18px"><button class="btn s" type="submit" id="pSave">Paketi ekle</button><button class="btn s g" type="button" id="pReset" hidden>Vazgeç</button></div>
         </form>
         <div class="card" id="adminPk"></div>
       </div>
-      <div id="t-or" hidden><div id="adminOr"></div></div>
+      <div id="t-ic" hidden><div class="card" id="icList"></div><div id="icEd"></div></div>
+      <div id="t-or" hidden><div class="acts" style="margin-bottom:14px;align-items:center"><button class="btn xs g" data-ic="sync">Erişimleri güncelle</button><small class="sm">Onaylı tüm siparişlerin öğrenci erişimini yeniler (bir kerelik).</small></div><div id="adminOr"></div></div>
       <div id="t-us" hidden><div id="adminUs"></div></div>
       <div id="t-ad" hidden>
         <form class="card" id="adForm">
@@ -657,7 +669,7 @@ onAuthStateChanged(auth,u=>{
       allOrders=s.docs.map(d=>({id:d.id,...d.data()}));
       if(!ilk)allOrders.filter(o=>!eski.has(o.id)&&o.durum==='bekliyor').forEach(o=>toast('Yeni sipariş: '+(o.kod||'')+' · '+(o.ad||'')));
       drawAdminOr()});
-    sub(collection(db,'contents'),s=>{contents={};s.docs.forEach(d=>contents[d.id]=d.data().link)});
+    sub(collection(db,'contents'),s=>{contents={};s.docs.forEach(d=>contents[d.id]=d.data());drawIcList()});
     sub(collection(db,'users'),s=>{users=s.docs.map(d=>({id:d.id,...d.data()}));drawAdminUs()});
   }
 });
@@ -827,11 +839,71 @@ function drawMyOrders(){
 /* ---------- yönetim ---------- */
 $$('.tab[data-t]').forEach(t=>t.addEventListener('click',()=>{
   $$('.tab[data-t]').forEach(x=>x.setAttribute('aria-selected',x===t));
-  ['pk','or','us','py','ad'].forEach(k=>$('#t-'+k).hidden=k!==t.dataset.t);
+  ['pk','ic','or','us','py','ad'].forEach(k=>$('#t-'+k).hidden=k!==t.dataset.t);
 }));
-function drawAdminPk(){
+function drawAdminPk(){drawIcList();
   $('#adminPk').innerHTML=pkgs.length?pkgs.map(p=>`<div class="row"><div><strong>${esc(p.baslik)}</strong> ${p.yayin===false?'<span class="chip">Taslak</span>':''}<br><small>${TL(p.fiyat)}${flashOn(p)?` → ${TL(p.indirimFiyat)} flash`:''} · ${(p.gorseller||[]).length} görsel · ${({standart:'Standart',gumus:'Gümüş',gold:'Gold',premium:'Premium'})[frameOf(p)]} çerçeve${(p.etiketler||[]).length?` · ${p.etiketler.length} etiket`:''}</small>${p.indirimFiyat&&!flashOn(p)?' <span class="chip">Flash süresi doldu</span>':''}</div><div class="acts"><button class="btn s g" data-a="edit" data-id="${p.id}">Düzenle</button><button class="btn s d" data-a="del" data-id="${p.id}">Sil</button></div></div>`).join(''):'<span class="sm">Henüz paket yok.</span>';
 }
+
+/* ---------- içerik sekmesi ---------- */
+let icPid=null,icItems=[];
+function legacyToItems(txt){
+  const out=[];
+  String(txt||'').split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l[0]!=='#').forEach(l=>{
+    const k=l.lastIndexOf('|'),t=k>-1?l.slice(0,k).trim():'',u=(k>-1?l.slice(k+1):l).trim();
+    if(!/^https?:\/\//i.test(u))return;
+    const vid=/youtu\.?be|\.(mp4|webm|mov)(\?|$)|firebasestorage|storage\.googleapis/i.test(u);
+    if(vid||!out.length)out.push(vid?{t,u,pdfs:[]}:{t:'',u:'',pdfs:[{t,u}]});
+    else out[out.length-1].pdfs.push({t,u});
+  });
+  return out;
+}
+const icOf=pid=>{const c=contents[pid];return c&&Array.isArray(c.items)?JSON.parse(JSON.stringify(c.items)):legacyToItems(c&&c.link)};
+function drawIcList(){
+  const el=$('#icList');if(!el)return;
+  el.innerHTML=pkgs.length?pkgs.map(p=>{const it=icOf(p.id),np=it.reduce((n,v)=>n+(v.pdfs||[]).length,0);
+    return `<div class="row icrow${p.id===icPid?' on':''}" data-ic="open" data-id="${esc(p.id)}"><div><strong>${esc(p.baslik)}</strong><br><small>${it.length} video · ${np} PDF</small></div><span class="och">›</span></div>`}).join(''):'<div class="empty">Önce bir paket ekle.</div>';
+}
+function renderEd(){
+  const el=$('#icEd');if(!icPid){el.innerHTML='';return}
+  const p=pkgs.find(x=>x.id===icPid);
+  el.innerHTML=`<div class="card" style="margin-top:16px"><div class="row" style="padding-top:0"><strong>${esc(p?p.baslik:'')}</strong><button class="btn xs g" data-ic="close">Kapat</button></div>
+  ${icItems.map((v,i)=>`<div class="vc"><div class="vh"><b>Video ${i+1}</b><button class="btn xs g" data-ic="up" data-i="${i}">↑</button><button class="btn xs g" data-ic="dn" data-i="${i}">↓</button><button class="btn xs d" data-ic="delv" data-i="${i}">Sil</button></div>
+  <input data-i="${i}" data-f="t" placeholder="Video adı" value="${esc(v.t)}"><input data-i="${i}" data-f="u" placeholder="Video bağlantısı (YouTube vb.)" value="${esc(v.u)}">
+  ${(v.pdfs||[]).map((q,j)=>`<div class="pr"><input data-i="${i}" data-j="${j}" data-f="t" placeholder="PDF adı" value="${esc(q.t)}"><input data-i="${i}" data-j="${j}" data-f="u" placeholder="PDF bağlantısı (Drive vb.)" value="${esc(q.u)}"><button class="btn xs d" data-ic="delp" data-i="${i}" data-j="${j}">PDF'i sil</button></div>`).join('')}
+  <button class="btn xs g" style="margin-top:10px" data-ic="addp" data-i="${i}">+ PDF ekle</button></div>`).join('')}
+  <div class="acts" style="margin-top:16px"><button class="btn s g" data-ic="addv">+ Video ekle</button><button class="btn s" data-ic="save">Kaydet</button></div></div>`;
+}
+$('#icEd').addEventListener('input',e=>{const t=e.target;if(!t.dataset.f)return;const i=+t.dataset.i;if(t.dataset.j!==undefined)icItems[i].pdfs[+t.dataset.j][t.dataset.f]=t.value;else icItems[i][t.dataset.f]=t.value});
+async function icSave(){
+  const url=u=>/^https?:\/\//i.test(u.trim());
+  for(const [i,v] of icItems.entries()){
+    if(!v.t.trim()||!url(v.u))return toast('Video '+(i+1)+': ad ve https:// ile başlayan bağlantı gerekli.');
+    for(const [j,q] of (v.pdfs||[]).entries())if(!q.t.trim()||!url(q.u))return toast('Video '+(i+1)+', PDF '+(j+1)+': ad ve https:// ile başlayan bağlantı gerekli.');
+  }
+  const items=icItems.map(v=>({t:v.t.trim(),u:v.u.trim(),pdfs:(v.pdfs||[]).map(q=>({t:q.t.trim(),u:q.u.trim()}))}));
+  try{await setDoc(doc(db,'contents',icPid),{items,link:''});toast('İçerik kaydedildi.')}catch(x){toast(hata(x))}
+}
+async function syncAcc(b){
+  b.disabled=true;
+  try{let n=0;for(const o of allOrders.filter(x=>x.durum==='onaylandı'))for(const k of o.kalemler){await setDoc(doc(db,'users',o.uid,'erisim',k.id),{ts:serverTimestamp(),siparis:o.id});n++}toast(n+' erişim güncellendi.')}
+  catch(x){toast(hata(x))}
+  b.disabled=false;
+}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-ic]');if(!b)return;
+  const a=b.dataset.ic,i=+b.dataset.i,j=+b.dataset.j;
+  if(a==='open'){icPid=b.dataset.id;icItems=icOf(icPid);drawIcList();renderEd();$('#icEd').scrollIntoView({behavior:'smooth',block:'start'})}
+  else if(a==='close'){icPid=null;icItems=[];drawIcList();renderEd()}
+  else if(a==='addv'){icItems.push({t:'',u:'',pdfs:[]});renderEd()}
+  else if(a==='delv'){if(await ask("Bu video ve PDF'leri silinsin mi?")){icItems.splice(i,1);renderEd()}}
+  else if(a==='up'&&i>0){[icItems[i-1],icItems[i]]=[icItems[i],icItems[i-1]];renderEd()}
+  else if(a==='dn'&&i<icItems.length-1){[icItems[i+1],icItems[i]]=[icItems[i],icItems[i+1]];renderEd()}
+  else if(a==='addp'){icItems[i].pdfs=icItems[i].pdfs||[];icItems[i].pdfs.push({t:'',u:''});renderEd()}
+  else if(a==='delp'){icItems[i].pdfs.splice(j,1);renderEd()}
+  else if(a==='save'){b.disabled=true;await icSave();b.disabled=false}
+  else if(a==='sync')await syncAcc(b);
+});
 function resetPk(){$('#pkForm').reset();resetDeco();$('#pid').value='';$('#pSave').textContent='Paketi ekle';$('#pReset').hidden=true}
 $('#pReset').addEventListener('click',resetPk);
 form('#pkForm',async e=>{
@@ -848,23 +920,22 @@ form('#pkForm',async e=>{
   d.etiketler=ptags.slice(0,5);d.cerceve=$('#pcr').value;d.indirimFiyat=ifyat;d.indirimBitis=ibit;
   try{
     const id=$('#pid').value;
-    const ic=$('#pi').value.trim();
-    const kotu=ic.split(/\r?\n/).map(x=>x.trim()).filter(x=>x&&x[0]!=='#').find(x=>!/^https?:\/\//i.test(x.slice(x.lastIndexOf('|')+1).trim()));
-    if(kotu)return toast('Şu satırda geçerli bağlantı yok (https:// ile başlamalı): '+kotu.slice(0,40));
     let pid=id;
     if(id)await updateDoc(doc(db,'packages',id),d);else pid=(await addDoc(collection(db,'packages'),{...d,ts:serverTimestamp()})).id;
-    await setDoc(doc(db,'contents',pid),{link:ic});
     toast(id?'Paket güncellendi.':'Paket eklendi.');resetPk();
   }catch(x){toast(hata(x))}
 });
+const openO=new Set();
 function drawAdminOr(){
   const n=allOrders.filter(o=>o.durum==='bekliyor').length;$('#pc').textContent=n?' ('+n+')':'';
   const al=$('#aAlert');al.hidden=!n;al.textContent=n?n+' sipariş onay bekliyor. Görmek için dokun.':'';
-  $('#adminOr').innerHTML=allOrders.length?sorted(allOrders).map(o=>`<div class="card"><div class="row" style="padding-top:0"><div><strong>${o.kod?esc(o.kod)+' · ':''}${esc(o.ad)}</strong><br><small>${esc(o.email)} · ${esc(o.tel)} · ${tarih(o.ts)}</small></div>${durumChip(o.durum)}</div>
+  $('#adminOr').innerHTML=allOrders.length?sorted(allOrders).map(o=>{const op=openO.has(o.id);return `<div class="card ocard s-${esc(o.durum)}${op?' open':''}"><div class="ohd" data-o="${o.id}" role="button" tabindex="0"><div class="otx"><strong>${o.kod?esc(o.kod)+' · ':''}${esc(o.ad)}</strong><small>${TL(o.toplam)} · ${tarih(o.ts)}</small></div>${durumChip(o.durum)}<span class="och">▾</span></div>
+  <div class="obd"${op?'':' hidden'}><small class="sm" style="display:block;padding:10px 0">${esc(o.email)} · ${esc(o.tel)}</small>
   ${o.kalemler.map(k=>`<div class="row"><span>${esc(k.baslik)}</span><span>${TL(k.fiyat)}</span></div>`).join('')}
   <div class="total"><span>Toplam</span><span>${TL(o.toplam)}</span></div>
-  <div class="acts" style="margin-top:12px"><button class="btn s ${o.durum==='iptal'?'off':'ok'}" data-a="st" data-id="${o.id}" data-s="onaylandı">Onayla</button><button class="btn s ${o.durum==='onaylandı'?'off':'no'}" data-a="st" data-id="${o.id}" data-s="iptal">İptal</button><button class="btn xs d" data-a="odel" data-id="${o.id}" style="margin-left:auto">Sil</button></div></div>`).join(''):'<div class="empty" style="margin-top:20px">Henüz sipariş yok.</div>';
+  <div class="acts" style="margin-top:12px"><button class="btn s ${o.durum==='iptal'?'off':'ok'}" data-a="st" data-id="${o.id}" data-s="onaylandı">Onayla</button><button class="btn s ${o.durum==='onaylandı'?'off':'no'}" data-a="st" data-id="${o.id}" data-s="iptal">İptal</button><button class="btn xs d" data-a="odel" data-id="${o.id}" style="margin-left:auto">Sil</button></div></div></div>`}).join(''):'<div class="empty" style="margin-top:20px">Henüz sipariş yok.</div>';
 }
+$('#adminOr').addEventListener('click',e=>{const h=e.target.closest('[data-o]');if(!h)return;const id=h.dataset.o;openO.has(id)?openO.delete(id):openO.add(id);drawAdminOr()});
 $('#aAlert').addEventListener('click',()=>$('.tab[data-t="or"]').click());
 function drawAdminUs(){
   $('#adminUs').innerHTML=users.length?sorted(users).map(u=>`<div class="card"><strong>${esc(u.ad)}</strong><br><small>${esc([u.kullanici,u.email,u.tel].filter(Boolean).join(' · '))}</small>
@@ -884,12 +955,17 @@ form('#payForm',async e=>{
   try{await setDoc(doc(db,'settings','payment'),{iban:$('#yi').value.trim(),sahip:$('#ys').value.trim(),banka:$('#yb').value.trim(),wa:$('#yw').value.replace(/\D/g,'')});toast('Ödeme bilgileri kaydedildi.')}catch(x){toast(hata(x))}
 });
 
+async function revoke(o,skipId){
+  const still=new Set(allOrders.filter(x=>x.uid===o.uid&&x.id!==skipId&&x.durum==='onaylandı').flatMap(x=>x.kalemler.map(k=>k.id)));
+  await Promise.all(o.kalemler.filter(k=>!still.has(k.id)).map(k=>deleteDoc(doc(db,'users',o.uid,'erisim',k.id))));
+}
 async function setStatus(id,durum){
   const o=allOrders.find(x=>x.id===id);if(!o)return;
-  let kal=o.kalemler.map(k=>({id:k.id,baslik:k.baslik,fiyat:k.fiyat}));
-  if(durum==='onaylandı')kal=await Promise.all(kal.map(async k=>{const d=await getDoc(doc(db,'contents',k.id));return {...k,icerik:d.exists()?(d.data().link||''):''}}));
+  const kal=o.kalemler.map(k=>({id:k.id,baslik:k.baslik,fiyat:k.fiyat}));
   await updateDoc(doc(db,'orders',id),{durum,kalemler:kal});
-  toast(durum==='onaylandı'?'Sipariş onaylandı. İçerik öğrenciye tanımlandı.':'Sipariş güncellendi.');
+  if(durum==='onaylandı')await Promise.all(kal.map(k=>setDoc(doc(db,'users',o.uid,'erisim',k.id),{ts:serverTimestamp(),siparis:id})));
+  else await revoke(o,id);
+  toast(durum==='onaylandı'?'Sipariş onaylandı. Öğrenciye erişim verildi.':'Sipariş iptal edildi. Erişim kaldırıldı.');
 }
 const DOCS={
 hakkimizda:{t:'Hakkımızda',h:`<p>Merhaba, ben Ahmet Altındağ. Konya Necmettin Erbakan Üniversitesi Arapça Öğretmenliği bölümünden mezun oldum. Yaklaşık 7 yıldır online ve yüz yüze Arapça eğitimi veriyor, bugüne kadar 100’den fazla öğrencinin Arapça öğrenme yolculuğuna eşlik ediyorum.</p>
@@ -960,7 +1036,7 @@ document.addEventListener('click',async e=>{
     if(a==='buy')startBuy(id);
     else if(a==='copy'){await navigator.clipboard.writeText(b.dataset.c);toast('Kopyalandı.')}
     else if(a==='order')await order();
-    else if(a==='edit'){const p=pkgs.find(x=>x.id===id);$('#pid').value=id;$('#pt').value=p.baslik;$('#pd').value=p.aciklama;$('#pf').value=p.fiyat;$('#py').checked=p.yayin!==false;$('#pi').value=contents[id]||'';$('#pg').value=(p.gorseller||[]).join('\n');fillDeco(p);$('#pSave').textContent='Değişiklikleri kaydet';$('#pReset').hidden=false;$('#pkForm').scrollIntoView({behavior:'smooth'})}
+    else if(a==='edit'){const p=pkgs.find(x=>x.id===id);$('#pid').value=id;$('#pt').value=p.baslik;$('#pd').value=p.aciklama;$('#pf').value=p.fiyat;$('#py').checked=p.yayin!==false;$('#pg').value=(p.gorseller||[]).join('\n');fillDeco(p);$('#pSave').textContent='Değişiklikleri kaydet';$('#pReset').hidden=false;$('#pkForm').scrollIntoView({behavior:'smooth'})}
     else if(a==='del'){await deleteDoc(doc(db,'packages',id));await deleteDoc(doc(db,'contents',id));toast('Paket silindi.')}
     else if(a==='aup'||a==='adown'){
       const i=ads.findIndex(x=>x.id===id),j=a==='aup'?i-1:i+1;
@@ -969,7 +1045,7 @@ document.addEventListener('click',async e=>{
       try{await Promise.all(ids.map((x,k)=>updateDoc(doc(db,'ads',x),{sira:k})))}catch(x){toast(hata(x))}
     }
     else if(a==='adel'){await deleteDoc(doc(db,'ads',id));toast('Reklam silindi.')}
-    else if(a==='odel'){await deleteDoc(doc(db,'orders',id));toast('Sipariş silindi.')}
+    else if(a==='odel'){const oo=allOrders.find(x=>x.id===id);if(oo&&oo.durum==='onaylandı')await revoke(oo,id);await deleteDoc(doc(db,'orders',id));toast('Sipariş silindi.')}
     else if(a==='st'){await setStatus(id,b.dataset.s)}
   }catch(x){toast(hata(x))}
   });
