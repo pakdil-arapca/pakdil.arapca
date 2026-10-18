@@ -276,7 +276,7 @@ a.btn{display:inline-block;text-align:center;text-decoration:none}
 /* tema düğmesi + karanlık tema */
 .thm{flex:none;width:44px;height:44px;display:grid;place-items:center;background:none;border:0;padding:0;color:#c8102e;cursor:pointer;border-radius:50%;-webkit-tap-highlight-color:transparent}
 body.admin .thm{color:#2f6fe0}
-.thm-in{margin-left:auto;margin-right:6px;width:40px;height:40px}
+.thm-in{width:40px;height:40px}
 .thm svg{width:28px;height:28px;overflow:visible}
 
 .thm-row{display:flex;justify-content:center;margin-top:10px}
@@ -302,6 +302,12 @@ body.admin .thm{color:#2f6fe0}
 [data-theme=dark] .vnote{background:#3a2f12;color:#f6e6b4}[data-theme=dark] .flbox{background:#241a10}[data-theme=dark] .dot:not(.on){background:#3a3a44}
 [data-theme=dark] body.admin{--red:#4d86ee;--red-d:#3a6ccc}
 [data-theme=dark] .chip{color:#1a1306}[data-theme=dark] .empty{border-color:#3a3a44}
+/* şeffaf (buzlu cam) yan menü */
+.drawer{background:rgba(255,255,255,.58);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4)}
+.drawer .drawer-head{background:rgba(0,0,0,.5)}
+.drawer .kart{background:rgba(255,255,255,.5)}
+[data-theme=dark] .drawer{background:rgba(14,14,18,.58)}
+[data-theme=dark] .drawer .kart{background:rgba(32,32,38,.5)}
 </style>
 <script>try{var t=localStorage.getItem("pk-tema-ana");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
