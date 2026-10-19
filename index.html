@@ -404,7 +404,8 @@ body.admin .thm{color:#2f6fe0}
       <button class="kart" id="dMine" data-v="mine"><strong>Paketlerim</strong><span>Satın aldığın içerikler</span></button>
       <a class="kart" id="dEgitim" href="https://pakdil-arapca.github.io/egitim/" hidden style="display:block;text-decoration:none;color:inherit"><strong>Eğitim Alanım</strong><span>Videolar ve PDF'ler</span></a>
       <button class="kart" data-v="admin" id="adminLink" hidden><strong>Yönetim paneline dön</strong><span>Admin ekranına geri dön</span></button>
-      <button class="kart" id="prevLink" data-v="preview" hidden><strong>Kullanıcı gözüyle bak</strong><span>Siteyi öğrenci olarak gör</span></button>
+      <button class="kart" id="prevLink" data-v="preview" hidden><strong>Ana Siteye Bak</strong><span>Siteyi öğrenci olarak gör</span></button>
+      <a class="kart" id="dEgitimAdm" href="https://pakdil-arapca.github.io/egitim/" target="_blank" rel="noopener" hidden style="display:block;text-decoration:none;color:inherit"><strong>Eğitim Sitesine Bak</strong><span>Eğitim alanını öğrenci gibi gör</span></a>
       <button class="kart" id="dSet" data-v="set"><strong>Ayarlar</strong><span>Şifre ve hesap bilgilerin</span></button>
     </div>
   </aside>
@@ -683,7 +684,7 @@ function view(v){
   const adm=isAdmin&&!preview;
   document.body.classList.toggle('admin',adm);
   ['dHome','dOrders','dMine','dEgitim'].forEach(i=>$('#'+i).hidden=isAdmin);
-  $('#prevLink').hidden=!adm;$('#adminLink').hidden=!(isAdmin&&preview);
+  $('#prevLink').hidden=!adm;$('#dEgitimAdm').hidden=!adm;$('#adminLink').hidden=!(isAdmin&&preview);
   if(v==='set'){fillSet();$('#delForm').hidden=isAdmin}
   drawVerify();
   closeDrawer();window.scrollTo(0,0);
@@ -828,7 +829,7 @@ const durumChip=d=>`<span class="chip ${esc(d)}">${esc(d)}</span>`;
 const EGITIM_URL='https://pakdil-arapca.github.io/egitim/';
 function drawMine(){
   const it=myOrders.filter(o=>o.durum==='onaylandı').flatMap(o=>o.kalemler);
-  $('#dEgitim').hidden=!it.length;
+  $('#dEgitim').hidden=isAdmin||!it.length;
   $('#mine').innerHTML=it.length?'<div class="card" style="margin-top:20px">'+it.map(k=>`<div class="row"><strong>${esc(k.baslik)}</strong>${/https?:\/\//i.test(k.icerik||'')?`<a class="btn s" href="${EGITIM_URL}" target="_blank" rel="noopener noreferrer">Eğitim Alanında aç</a>`:'<span class="sm">Bağlantı yakında eklenecek</span>'}</div>`).join('')+'</div>':'<div class="empty" style="margin-top:20px">Onaylanmış bir paketin yok. Siparişin onaylanınca burada görünür.</div>';
 }
 function contactHTML(){const w=(pay.wa||'').replace(/\D/g,'');return `<a class="btn s g" href="mailto:${ADMIN_EMAIL}">E-posta</a>`+(w?`<a class="btn s ok" href="https://wa.me/${w}" target="_blank" rel="noopener">WhatsApp</a>`:'')}
