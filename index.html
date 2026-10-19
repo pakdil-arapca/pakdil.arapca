@@ -323,6 +323,7 @@ body.admin .thm{color:#2f6fe0}
 .vc input{margin-top:8px}.vh{display:flex;align-items:center;gap:8px}.vh b{flex:1}
 .pr{margin-top:10px;padding:10px;border-left:3px solid var(--red);background:var(--soft);border-radius:0 10px 10px 0}.pr .btn{margin-top:8px}
 .vh b{white-space:nowrap}
+.exbox{margin-top:8px;border-top:1px solid var(--line)}
 </style>
 <script>try{var t=localStorage.getItem("pk-tema-ana");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
@@ -564,7 +565,7 @@ body.admin .thm{color:#2f6fe0}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendPasswordResetEmail,updatePassword,reauthenticateWithCredential,EmailAuthProvider,deleteUser,sendEmailVerification} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,collection,onSnapshot,query,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,collection,onSnapshot,query,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const app=initializeApp({
   apiKey:"AIzaSyCGoResXYR7G_Eleo7uAPGtwi4lfMK7j0U",
@@ -846,7 +847,7 @@ function drawAdminPk(){drawIcList();
 }
 
 /* ---------- içerik sekmesi ---------- */
-let icPid=null,icItems=[];
+let icPid=null,icItems=[],icGun='';
 function legacyToItems(txt){
   const out=[];
   String(txt||'').split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&l[0]!=='#').forEach(l=>{
@@ -862,38 +863,50 @@ const icOf=pid=>{const c=contents[pid];return c&&Array.isArray(c.items)?JSON.par
 function drawIcList(){
   const el=$('#icList');if(!el)return;
   el.innerHTML=pkgs.length?pkgs.map(p=>{const it=icOf(p.id),np=it.reduce((n,v)=>n+(v.pdfs||[]).length,0);
-    return `<div class="row icrow${p.id===icPid?' on':''}" data-ic="open" data-id="${esc(p.id)}"><div><strong>${esc(p.baslik)}</strong><br><small>${it.length} video · ${np} PDF</small></div><span class="och">›</span></div>`}).join(''):'<div class="empty">Önce bir paket ekle.</div>';
+    return `<div class="row icrow${p.id===icPid?' on':''}" data-ic="open" data-id="${esc(p.id)}"><div><strong>${esc(p.baslik)}</strong><br><small>${it.length} video · ${np} PDF · ${contents[p.id]&&contents[p.id].gun?contents[p.id].gun+' gün':'süresiz'}</small></div><span class="och">›</span></div>`}).join(''):'<div class="empty">Önce bir paket ekle.</div>';
 }
 function renderEd(){
   const el=$('#icEd');if(!icPid){el.innerHTML='';return}
   const p=pkgs.find(x=>x.id===icPid);
   el.innerHTML=`<div class="card" style="margin-top:16px"><div class="row" style="padding-top:0"><strong>${esc(p?p.baslik:'')}</strong><button class="btn xs g" data-ic="close">Kapat</button></div>
+  <div class="vc" style="margin-top:0"><label for="icGun">Erişim süresi (gün)</label><input id="icGun" type="number" min="1" step="1" placeholder="Boş bırak = süresiz" value="${esc(icGun)}"><small class="sm">Süre, öğrencinin siparişi onaylandığı günden başlar. Sonradan değiştirirsen sadece yeni alanlara uygulanır.</small></div>
   ${icItems.map((v,i)=>`<div class="vc"><div class="vh"><b>Video ${i+1}</b><button class="btn xs g" data-ic="up" data-i="${i}">↑</button><button class="btn xs g" data-ic="dn" data-i="${i}">↓</button><button class="btn xs d" data-ic="delv" data-i="${i}">Sil</button></div>
   <input data-i="${i}" data-f="t" placeholder="Video adı" value="${esc(v.t)}"><input data-i="${i}" data-f="u" placeholder="Video bağlantısı (YouTube vb.)" value="${esc(v.u)}">
   ${(v.pdfs||[]).map((q,j)=>`<div class="pr"><input data-i="${i}" data-j="${j}" data-f="t" placeholder="PDF adı" value="${esc(q.t)}"><input data-i="${i}" data-j="${j}" data-f="u" placeholder="PDF bağlantısı (Drive vb.)" value="${esc(q.u)}"><button class="btn xs d" data-ic="delp" data-i="${i}" data-j="${j}">PDF'i sil</button></div>`).join('')}
   <button class="btn xs g" style="margin-top:10px" data-ic="addp" data-i="${i}">+ PDF ekle</button></div>`).join('')}
   <div class="acts" style="margin-top:16px"><button class="btn s g" data-ic="addv">+ Video ekle</button><button class="btn s" data-ic="save">Kaydet</button></div></div>`;
 }
-$('#icEd').addEventListener('input',e=>{const t=e.target;if(!t.dataset.f)return;const i=+t.dataset.i;if(t.dataset.j!==undefined)icItems[i].pdfs[+t.dataset.j][t.dataset.f]=t.value;else icItems[i][t.dataset.f]=t.value});
+$('#icEd').addEventListener('input',e=>{const t=e.target;if(t.id==='icGun'){icGun=t.value;return}if(!t.dataset.f)return;const i=+t.dataset.i;if(t.dataset.j!==undefined)icItems[i].pdfs[+t.dataset.j][t.dataset.f]=t.value;else icItems[i][t.dataset.f]=t.value});
 async function icSave(){
+  const gun=icGun===''?null:Math.round(+icGun);
+  if(gun!==null&&!(gun>=1))return toast('Erişim süresi en az 1 gün olmalı (süresiz için boş bırak).');
   const url=u=>/^https?:\/\//i.test(u.trim());
   for(const [i,v] of icItems.entries()){
     if(!v.t.trim()||!url(v.u))return toast('Video '+(i+1)+': ad ve https:// ile başlayan bağlantı gerekli.');
     for(const [j,q] of (v.pdfs||[]).entries())if(!q.t.trim()||!url(q.u))return toast('Video '+(i+1)+', PDF '+(j+1)+': ad ve https:// ile başlayan bağlantı gerekli.');
   }
   const items=icItems.map(v=>({t:v.t.trim(),u:v.u.trim(),pdfs:(v.pdfs||[]).map(q=>({t:q.t.trim(),u:q.u.trim()}))}));
-  try{await setDoc(doc(db,'contents',icPid),{items,link:''});toast('İçerik kaydedildi.')}catch(x){toast(hata(x))}
+  try{await setDoc(doc(db,'contents',icPid),{items,link:'',gun});toast('İçerik kaydedildi.')}catch(x){toast(hata(x))}
 }
 async function syncAcc(b){
   b.disabled=true;
-  try{let n=0;for(const o of allOrders.filter(x=>x.durum==='onaylandı'))for(const k of o.kalemler){await setDoc(doc(db,'users',o.uid,'erisim',k.id),{ts:serverTimestamp(),siparis:o.id});n++}toast(n+' erişim güncellendi.')}
+  try{let n=0;for(const o of allOrders.filter(x=>x.durum==='onaylandı'))for(const k of o.kalemler){const ref=doc(db,'users',o.uid,'erisim',k.id);if(!(await getDoc(ref)).exists()){await setDoc(ref,{ts:serverTimestamp(),siparis:o.id,bitis:null});n++}}toast(n+' yeni erişim eklendi (süresiz). Var olanlara dokunulmadı.')}
   catch(x){toast(hata(x))}
   b.disabled=false;
+}
+async function grant(o,k,sid){
+  const ref=doc(db,'users',o.uid,'erisim',k.id),g=contents[k.id]&&contents[k.id].gun,old=await getDoc(ref);
+  let bitis=null;
+  if(g&&!(old.exists()&&!old.data().bitis)){
+    const od=old.exists()&&old.data().bitis?old.data().bitis.toDate():null,base=od&&od>new Date()?od:new Date();
+    bitis=new Date(base.getTime()+g*864e5);
+  }
+  await setDoc(ref,{ts:serverTimestamp(),siparis:sid,bitis});
 }
 document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-ic]');if(!b)return;
   const a=b.dataset.ic,i=+b.dataset.i,j=+b.dataset.j;
-  if(a==='open'){icPid=b.dataset.id;icItems=icOf(icPid);drawIcList();renderEd();$('#icEd').scrollIntoView({behavior:'smooth',block:'start'})}
+  if(a==='open'){icPid=b.dataset.id;icItems=icOf(icPid);icGun=contents[icPid]&&contents[icPid].gun?String(contents[icPid].gun):'';drawIcList();renderEd();$('#icEd').scrollIntoView({behavior:'smooth',block:'start'})}
   else if(a==='close'){icPid=null;icItems=[];drawIcList();renderEd()}
   else if(a==='addv'){icItems.push({t:'',u:'',pdfs:[]});renderEd()}
   else if(a==='delv'){if(await ask("Bu video ve PDF'leri silinsin mi?")){icItems.splice(i,1);renderEd()}}
@@ -937,8 +950,30 @@ function drawAdminOr(){
 }
 $('#adminOr').addEventListener('click',e=>{const h=e.target.closest('[data-o]');if(!h)return;const id=h.dataset.o;openO.has(id)?openO.delete(id):openO.add(id);drawAdminOr()});
 $('#aAlert').addEventListener('click',()=>$('.tab[data-t="or"]').click());
+const exOpen=new Set(),exData={};
+async function loadEx(uid){const s=await getDocs(collection(db,'users',uid,'erisim'));exData[uid]=s.docs.map(d=>({id:d.id,...d.data()}))}
+function exHTML(uid){
+  const l=exData[uid];if(!l)return '<small class="sm">Yükleniyor…</small>';if(!l.length)return '<small class="sm">Erişimi olan paket yok.</small>';
+  return l.map(a=>{const p=pkgs.find(x=>x.id===a.id),b=a.bitis&&a.bitis.toDate?a.bitis.toDate():null;
+    const st=!b?'Süresiz':b>new Date()?Math.ceil((b-new Date())/864e5)+' gün kaldı ('+b.toLocaleDateString('tr-TR')+')':'Süresi doldu ('+b.toLocaleDateString('tr-TR')+')';
+    return `<div class="row"><div><strong>${esc(p?p.baslik:a.id)}</strong><br><small>${st}</small></div><div class="acts">${b?`<button class="btn xs g" data-ex="add" data-u="${uid}" data-id="${a.id}">+30 gün</button><button class="btn xs g" data-ex="inf" data-u="${uid}" data-id="${a.id}">Süresiz yap</button>`:''}</div></div>`}).join('');
+}
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-ex]');if(!b)return;
+  const a=b.dataset.ex,uid=b.dataset.u,pid=b.dataset.id;
+  try{
+    if(a==='open'){if(exOpen.has(uid))exOpen.delete(uid);else{exOpen.add(uid);drawAdminUs();await loadEx(uid)}drawAdminUs()}
+    else{
+      const ref=doc(db,'users',uid,'erisim',pid),cur=(exData[uid]||[]).find(x=>x.id===pid),od=cur&&cur.bitis&&cur.bitis.toDate?cur.bitis.toDate():null;
+      if(a==='add'){const base=od&&od>new Date()?od:new Date();await updateDoc(ref,{bitis:new Date(base.getTime()+30*864e5)});toast('30 gün eklendi.')}
+      else if(a==='inf'){await updateDoc(ref,{bitis:null});toast('Süresiz yapıldı.')}
+      await loadEx(uid);drawAdminUs();
+    }
+  }catch(x){toast(hata(x))}
+});
 function drawAdminUs(){
   $('#adminUs').innerHTML=users.length?sorted(users).map(u=>`<div class="card"><strong>${esc(u.ad)}</strong><br><small>${esc([u.kullanici,u.email,u.tel].filter(Boolean).join(' · '))}</small>
+  <div style="margin-top:10px"><button class="btn xs g" data-ex="open" data-u="${u.id}">Erişimler ${exOpen.has(u.id)?'▴':'▾'}</button></div>${exOpen.has(u.id)?`<div class="exbox">${exHTML(u.id)}</div>`:''}
   </div>`).join(''):'<div class="empty" style="margin-top:20px">Henüz kullanıcı yok.</div>';
 }
 function drawAdminAds(){
@@ -961,9 +996,10 @@ async function revoke(o,skipId){
 }
 async function setStatus(id,durum){
   const o=allOrders.find(x=>x.id===id);if(!o)return;
+  if(durum==='onaylandı'&&o.durum==='onaylandı')return toast('Bu sipariş zaten onaylı.');
   const kal=o.kalemler.map(k=>({id:k.id,baslik:k.baslik,fiyat:k.fiyat}));
   await updateDoc(doc(db,'orders',id),{durum,kalemler:kal});
-  if(durum==='onaylandı')await Promise.all(kal.map(k=>setDoc(doc(db,'users',o.uid,'erisim',k.id),{ts:serverTimestamp(),siparis:id})));
+  if(durum==='onaylandı')for(const k of kal)await grant(o,k,id);
   else await revoke(o,id);
   toast(durum==='onaylandı'?'Sipariş onaylandı. Öğrenciye erişim verildi.':'Sipariş iptal edildi. Erişim kaldırıldı.');
 }
